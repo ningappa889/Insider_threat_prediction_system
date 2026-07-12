@@ -1,0 +1,69 @@
+# ===========================
+# Python
+# ===========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual Environment
+venv/
+.venv/
+
+# Environment Variables
+.env
+
+# SQLite Database
+*.db
+
+# Logs
+logs/
+*.log
+
+# Python Cache
+.pytest_cache/
+.mypy_cache/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# ===========================
+# Node / React
+# ===========================
+node_modules/
+dist/
+
+# npm
+npm-debug.log*
+
+# ===========================
+# Build
+# ===========================
+build/
+
+# ===========================
+# Coverage
+# ===========================
+.coverage
+htmlcov/
+
+# ===========================
+# Docker
+# ===========================
+*.pid
+
+# ===========================
+# Misc
+# ===========================
+*.bak
+*.tmp
