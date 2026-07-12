@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from app.api.auth import router as auth_router
 from app.core.config import settings
 from app.database.init_db import init_db
 
@@ -8,7 +8,7 @@ app = FastAPI(
     version=settings.APP_VERSION,
     debug=settings.DEBUG
 )
-
+app.include_router(auth_router)
 
 @app.on_event("startup")
 def startup():

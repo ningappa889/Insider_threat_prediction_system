@@ -13,13 +13,11 @@ class User(Base):
 
     email = Column(String(100), unique=True, index=True, nullable=False)
 
-    username = Column(String(50), unique=True, index=True, nullable=False)
-
     password = Column(String(255), nullable=False)
 
     role = Column(String(30), nullable=False, default="Employee")
 
-    department = Column(String(100))
+    department = Column(String(100), nullable=True)
 
     is_active = Column(Boolean, default=True)
 
