@@ -71,6 +71,20 @@ class ActivityService:
                 description="Multiple failed login attempts detected within 10 minutes."
             )
 
+
+        if BehaviorService.detect_usb_data_theft(
+            db,
+            current_user.id
+        ):
+            AlertService.create_behavior_alert(
+                db=db,
+                user_id=current_user.id,
+                alert_type="POSSIBLE_DATA_EXFILTRATION",
+                severity="Critical",
+                risk_score=95,
+                description="USB device insertion followed by file access detected."
+            )
+
         return new_activity
     @staticmethod
     def get_all_activities(
