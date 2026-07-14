@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+from typing import Optional
 from app.core.dependencies import get_current_user
 from app.database.database import get_db
 from app.models.user import User
@@ -28,11 +28,18 @@ def create_activity(
 
 @router.get("/", response_model=list[ActivityResponse])
 def get_all_activities(
+    activity_type: Optional[str] = None,
+    severity: Optional[str] = None,
+    status: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return ActivityService.get_all_activities(db)
-
+    return ActivityService.get_all_activities(
+        db,
+        activity_type,
+        severity,
+        status
+    )
 
 @router.get("/{activity_id}", response_model=ActivityResponse)
 def get_activity(

@@ -33,8 +33,30 @@ class ActivityService:
         return new_activity
 
     @staticmethod
-    def get_all_activities(db: Session):
-        return db.query(Activity).all()
+    def get_all_activities(
+        db: Session,
+        activity_type: str = None,
+        severity: str = None,
+        status: str = None
+    ):
+        query = db.query(Activity)
+
+        if activity_type:
+            query = query.filter(
+                Activity.activity_type == activity_type
+            )
+
+        if severity:
+            query = query.filter(
+                Activity.severity == severity
+            )
+
+        if status:
+            query = query.filter(
+                Activity.status == status
+            )
+
+        return query.all()
 
     @staticmethod
     def get_activity_by_id(
