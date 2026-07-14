@@ -97,6 +97,19 @@ class ActivityService:
                 description="PowerShell executed outside business hours."
             )
 
+        if BehaviorService.detect_privilege_escalation(
+            db,
+            current_user.id
+        ):
+            AlertService.create_behavior_alert(
+                db=db,
+                user_id=current_user.id,
+                alert_type="PRIVILEGE_ESCALATION",
+                severity="Critical",
+                risk_score=100,
+                description="User gained administrator privileges shortly after login."
+            )
+
         return new_activity
     @staticmethod
     def get_all_activities(

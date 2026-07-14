@@ -69,3 +69,35 @@ class BehaviorService:
         hour = activity.created_at.hour
 
         return hour >= 23 or hour < 6
+    @staticmethod
+    def detect_privilege_escalation(
+        db: Session,
+        user_id: int
+    ):
+
+        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+
+        login = (
+            db.query(Activity)
+            .filter(
+                Activity.user_id == user_id,
+                Activity.activity_type == "LOGIN",
+                Activity.created_at >= ten_minutes_ago
+            )
+            .first()
+        )
+
+        privilege_change = (
+            db.query(Activity)
+            .filter(
+                Activity.user_id == user_id,
+                Activity.activity_type == "ADMIN_PRIVILEGE_CHANGE",
+                Activity.created_at >= ten_minutes_ago
+            )
+            .first()
+        )
+
+        return (
+            login is not None
+            and privilege_change is not None
+        )
