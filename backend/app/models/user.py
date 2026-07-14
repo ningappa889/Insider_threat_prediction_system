@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.sql import func
-
+from sqlalchemy.orm import relationship
 from app.database.database import Base
 
 
@@ -20,5 +20,9 @@ class User(Base):
     department = Column(String(100), nullable=True)
 
     is_active = Column(Boolean, default=True)
-
+    activities = relationship(
+        "Activity",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
     created_at = Column(DateTime(timezone=True), server_default=func.now())

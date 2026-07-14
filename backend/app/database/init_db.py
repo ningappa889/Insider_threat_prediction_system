@@ -1,7 +1,7 @@
 from app.database.database import Base, engine
 
 # Import all models here
-from app.models import User
+from app.models import User, Activity
 
 
 def init_db():
