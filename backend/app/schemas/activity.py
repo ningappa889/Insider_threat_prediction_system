@@ -22,6 +22,7 @@ class ActivityCreate(ActivityBase):
 class ActivityResponse(ActivityBase):
     id: int
     user_id: int
+    risk_score: int
     created_at: datetime
 
     class Config:

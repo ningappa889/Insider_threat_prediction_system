@@ -8,11 +8,33 @@ from app.schemas.activity import ActivityCreate
 class ActivityService:
 
     @staticmethod
+    def calculate_risk(activity_type: str):
+        risk_map = {
+            "LOGIN": (5, "Low"),
+            "LOGOUT": (2, "Low"),
+            "FAILED_LOGIN": (25, "Medium"),
+            "FILE_ACCESS": (20, "Medium"),
+            "USB_INSERT": (35, "High"),
+            "POWERSHELL": (45, "High"),
+            "ADMIN_PRIVILEGE_CHANGE": (80, "Critical")
+        }
+
+        return risk_map.get(
+            activity_type,
+            (10, "Low")
+        )
+
+    @staticmethod
     def create_activity(
         db: Session,
         current_user: User,
         activity: ActivityCreate
     ):
+
+        risk_score, severity = ActivityService.calculate_risk(
+            activity.activity_type
+        )
+
         new_activity = Activity(
             user_id=current_user.id,
             activity_type=activity.activity_type,
@@ -21,7 +43,8 @@ class ActivityService:
             device_name=activity.device_name,
             file_name=activity.file_name,
             process_name=activity.process_name,
-            severity=activity.severity,
+            severity=severity,
+            risk_score=risk_score,
             status=activity.status
         )
 

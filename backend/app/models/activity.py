@@ -29,7 +29,7 @@ class Activity(Base):
     process_name = Column(String(100), nullable=True)
 
     severity = Column(String(20), default="Low")
-
+    risk_score = Column(Integer, default=0)
     status = Column(String(20), default="Success")
 
     created_at = Column(
