@@ -13,7 +13,6 @@ class ActivityService:
         current_user: User,
         activity: ActivityCreate
     ):
-
         new_activity = Activity(
             user_id=current_user.id,
             activity_type=activity.activity_type,
@@ -68,3 +67,44 @@ class ActivityService:
             .filter(Activity.id == activity_id)
             .first()
         )
+
+    @staticmethod
+    def get_activity_statistics(db: Session):
+
+        total_users = db.query(User).count()
+
+        total_activities = db.query(Activity).count()
+
+        successful_logins = (
+            db.query(Activity)
+            .filter(
+                Activity.activity_type == "LOGIN",
+                Activity.status == "Success"
+            )
+            .count()
+        )
+
+        failed_logins = (
+            db.query(Activity)
+            .filter(
+                Activity.activity_type == "LOGIN",
+                Activity.status == "Failed"
+            )
+            .count()
+        )
+
+        high_severity_events = (
+            db.query(Activity)
+            .filter(
+                Activity.severity.in_(["High", "Critical"])
+            )
+            .count()
+        )
+
+        return {
+            "total_users": total_users,
+            "total_activities": total_activities,
+            "successful_logins": successful_logins,
+            "failed_logins": failed_logins,
+            "high_severity_events": high_severity_events
+        }
