@@ -85,6 +85,18 @@ class ActivityService:
                 description="USB device insertion followed by file access detected."
             )
 
+        if BehaviorService.detect_after_hours_powershell(
+            new_activity
+        ):
+            AlertService.create_behavior_alert(
+                db=db,
+                user_id=current_user.id,
+                alert_type="AFTER_HOURS_EXECUTION",
+                severity="Critical",
+                risk_score=85,
+                description="PowerShell executed outside business hours."
+            )
+
         return new_activity
     @staticmethod
     def get_all_activities(

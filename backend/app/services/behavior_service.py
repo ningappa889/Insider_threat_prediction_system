@@ -59,3 +59,13 @@ class BehaviorService:
             usb_insert is not None
             and file_access is not None
         )
+    @staticmethod
+    def detect_after_hours_powershell(
+        activity: Activity
+    ):
+        if activity.activity_type != "POWERSHELL":
+            return False
+
+        hour = activity.created_at.hour
+
+        return hour >= 23 or hour < 6
