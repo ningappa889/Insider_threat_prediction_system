@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 
 from app.models.alert import Alert
@@ -48,3 +50,41 @@ class AlertService:
             .filter(Alert.id == alert_id)
             .first()
         )
+    @staticmethod
+    def create_behavior_alert(
+        db: Session,
+        user_id: int,
+        alert_type: str,
+        severity: str,
+        risk_score: int,
+        description: str
+    ):
+
+        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+
+        existing_alert = (
+            db.query(Alert)
+            .filter(
+                Alert.user_id == user_id,
+                Alert.alert_type == alert_type,
+                Alert.created_at >= ten_minutes_ago
+            )
+            .first()
+        )
+
+        if existing_alert:
+            return existing_alert
+
+        alert = Alert(
+            user_id=user_id,
+            alert_type=alert_type,
+            severity=severity,
+            risk_score=risk_score,
+            description=description
+        )
+
+        db.add(alert)
+        db.commit()
+        db.refresh(alert)
+
+        return alert

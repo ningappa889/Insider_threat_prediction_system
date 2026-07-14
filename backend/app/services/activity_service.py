@@ -62,8 +62,13 @@ class ActivityService:
             db,
             current_user.id
         ):
-            print(
-                f"🚨 Brute Force Attack Detected for User ID {current_user.id}"
+            AlertService.create_behavior_alert(
+                db=db,
+                user_id=current_user.id,
+                alert_type="BRUTE_FORCE_ATTACK",
+                severity="Critical",
+                risk_score=90,
+                description="Multiple failed login attempts detected within 10 minutes."
             )
 
         return new_activity
