@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.activity import Activity
 from app.models.user import User
 from app.schemas.activity import ActivityCreate
+from app.services.alert_service import AlertService
 
 
 class ActivityService:
@@ -51,6 +52,11 @@ class ActivityService:
         db.add(new_activity)
         db.commit()
         db.refresh(new_activity)
+
+        AlertService.create_alert_if_needed(
+            db,
+            new_activity
+        )
 
         return new_activity
 

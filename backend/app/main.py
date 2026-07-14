@@ -4,7 +4,7 @@ from app.api.users import router as users_router
 from app.api.auth import router as auth_router
 from app.core.config import settings
 from app.database.init_db import init_db
-
+from app.api.alerts import router as alerts_router
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -14,7 +14,7 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(activities_router)
-
+app.include_router(alerts_router)
 
 @app.on_event("startup")
 def startup():
