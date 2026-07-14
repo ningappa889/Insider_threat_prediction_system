@@ -4,7 +4,7 @@ from app.models.activity import Activity
 from app.models.user import User
 from app.schemas.activity import ActivityCreate
 from app.services.alert_service import AlertService
-
+from app.services.behavior_service import BehaviorService
 
 class ActivityService:
 
@@ -58,8 +58,15 @@ class ActivityService:
             new_activity
         )
 
-        return new_activity
+        if BehaviorService.detect_brute_force(
+            db,
+            current_user.id
+        ):
+            print(
+                f"🚨 Brute Force Attack Detected for User ID {current_user.id}"
+            )
 
+        return new_activity
     @staticmethod
     def get_all_activities(
         db: Session,
