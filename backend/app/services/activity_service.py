@@ -9,21 +9,29 @@ from app.services.behavior_service import BehaviorService
 class ActivityService:
 
     @staticmethod
-    def calculate_risk(activity_type: str):
-        risk_map = {
-            "LOGIN": (5, "Low"),
-            "LOGOUT": (2, "Low"),
-            "FAILED_LOGIN": (25, "Medium"),
-            "FILE_ACCESS": (20, "Medium"),
-            "USB_INSERT": (35, "High"),
-            "POWERSHELL": (45, "High"),
-            "ADMIN_PRIVILEGE_CHANGE": (80, "Critical")
+    def calculate_risk(activity_type: str):     
+        risk_scores = {
+            "LOGIN": 5,
+            "LOGOUT": 2,
+            "FAILED_LOGIN": 25,
+            "FILE_ACCESS": 20,
+            "USB_INSERT": 35,
+            "POWERSHELL": 45,
+            "ADMIN_PRIVILEGE_CHANGE": 80,
         }
 
-        return risk_map.get(
-            activity_type,
-            (10, "Low")
-        )
+        risk_score = risk_scores.get(activity_type, 10)
+
+        if risk_score >= 75:
+            severity = "Critical"
+        elif risk_score >= 50:
+            severity = "High"
+        elif risk_score >= 25:
+            severity = "Medium"
+        else:
+            severity = "Low"
+
+        return risk_score, severity
 
     @staticmethod
     def create_activity(

@@ -24,40 +24,56 @@ export default function Alerts() {
     fetchAlerts();
   }, []);
 
-const fetchAlerts = async () => {
-  try {
-    console.log(
-      "Stored token:",
-      localStorage.getItem("access_token")
-    );
+  const fetchAlerts = async () => {
+    try {
+      console.log(
+        "Stored token:",
+        localStorage.getItem("access_token")
+      );
 
-    const response = await api.get("/alerts/");
+      const response = await api.get("/alerts/");
 
-    console.log("SUCCESS");
-    console.log(response.data);
+      console.log("SUCCESS");
+      console.log(response.data);
 
-    setAlerts(response.data);
-  } catch (error) {
-    console.log("STATUS:", error.response?.status);
-    console.log("RESPONSE:", error.response?.data);
-    console.log("REQUEST HEADERS:", error.config?.headers);
-  } finally {
-    setLoading(false);
-  }
-};
+      setAlerts(response.data);
+    } catch (error) {
+      console.log("STATUS:", error.response?.status);
+      console.log("RESPONSE:", error.response?.data);
+      console.log("REQUEST HEADERS:", error.config?.headers);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getSeverityColor = (severity) => {
     switch ((severity || "").toLowerCase()) {
       case "critical":
-        return "error";
+        return {
+          bgcolor: "#d32f2f",
+          color: "#fff",
+        };
+
       case "high":
-        return "warning";
+        return {
+          bgcolor: "#ed6c02",
+          color: "#fff",
+        };
+
       case "medium":
-        return "info";
+        return {
+          bgcolor: "#fbc02d",
+          color: "#000",
+        };
+
       case "low":
-        return "success";
+        return {
+          bgcolor: "#2e7d32",
+          color: "#fff",
+        };
+
       default:
-        return "default";
+        return {};
     }
   };
 
@@ -108,13 +124,27 @@ const fetchAlerts = async () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell><b>ID</b></TableCell>
-                <TableCell><b>User</b></TableCell>
-                <TableCell><b>Alert Type</b></TableCell>
-                <TableCell><b>Risk Score</b></TableCell>
-                <TableCell><b>Severity</b></TableCell>
-                <TableCell><b>Description</b></TableCell>
-                <TableCell><b>Created At</b></TableCell>
+                <TableCell>
+                  <b>ID</b>
+                </TableCell>
+                <TableCell>
+                  <b>User</b>
+                </TableCell>
+                <TableCell>
+                  <b>Alert Type</b>
+                </TableCell>
+                <TableCell>
+                  <b>Risk Score</b>
+                </TableCell>
+                <TableCell>
+                  <b>Severity</b>
+                </TableCell>
+                <TableCell>
+                  <b>Description</b>
+                </TableCell>
+                <TableCell>
+                  <b>Created At</b>
+                </TableCell>
               </TableRow>
             </TableHead>
 
@@ -145,8 +175,12 @@ const fetchAlerts = async () => {
                     <TableCell>
                       <Chip
                         label={alert.severity}
-                        color={getSeverityColor(alert.severity)}
                         size="small"
+                        sx={{
+                          ...getSeverityColor(alert.severity),
+                          fontWeight: 600,
+                          minWidth: 80,
+                        }}
                       />
                     </TableCell>
 
@@ -156,7 +190,9 @@ const fetchAlerts = async () => {
 
                     <TableCell>
                       {alert.created_at
-                        ? new Date(alert.created_at).toLocaleString()
+                        ? new Date(
+                            alert.created_at
+                          ).toLocaleString()
                         : "-"}
                     </TableCell>
                   </TableRow>

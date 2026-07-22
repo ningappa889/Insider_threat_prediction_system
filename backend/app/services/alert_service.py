@@ -9,17 +9,29 @@ from app.models.activity import Activity
 class AlertService:
 
     @staticmethod
+    def calculate_severity(risk_score: int) -> str:
+        if risk_score >= 75:
+            return "Critical"
+        elif risk_score >= 50:
+            return "High"
+        elif risk_score >= 25:
+            return "Medium"
+        else:
+            return "Low"
+
+    @staticmethod
     def create_alert_if_needed(
         db: Session,
         activity: Activity
     ):
-        if activity.risk_score < 30:
+        # Ignore very low-risk activities
+        if activity.risk_score < 20:
             return None
 
         alert = Alert(
             user_id=activity.user_id,
             alert_type=activity.activity_type,
-            severity=activity.severity,
+            severity=AlertService.calculate_severity(activity.risk_score),
             risk_score=activity.risk_score,
             description=activity.description
         )
@@ -31,9 +43,7 @@ class AlertService:
         return alert
 
     @staticmethod
-    def get_all_alerts(
-        db: Session
-    ):
+    def get_all_alerts(db: Session):
         return (
             db.query(Alert)
             .order_by(Alert.created_at.desc())
@@ -50,6 +60,7 @@ class AlertService:
             .filter(Alert.id == alert_id)
             .first()
         )
+
     @staticmethod
     def create_behavior_alert(
         db: Session,
@@ -78,7 +89,7 @@ class AlertService:
         alert = Alert(
             user_id=user_id,
             alert_type=alert_type,
-            severity=severity,
+            severity=AlertService.calculate_severity(risk_score),
             risk_score=risk_score,
             description=description
         )
