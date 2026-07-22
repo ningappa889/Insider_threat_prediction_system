@@ -48,9 +48,7 @@ class MLService:
         ])
 
         prediction = model.predict(sample)[0]
-
         probability = model.predict_proba(sample)[0]
-
         confidence = max(probability) * 100
 
         prediction_text = (
@@ -59,14 +57,19 @@ class MLService:
             else "Normal Activity"
         )
 
-        if confidence >= 90:
-            risk_level = "Critical"
-        elif confidence >= 70:
-            risk_level = "High"
-        elif confidence >= 50:
-            risk_level = "Medium"
-        else:
+        # Determine risk level based on prediction and risk score
+        if prediction == 0:
+            # Normal activity should always have Low risk
             risk_level = "Low"
+        else:
+            if risk_score >= 90:
+                risk_level = "Critical"
+            elif risk_score >= 70:
+                risk_level = "High"
+            elif risk_score >= 50:
+                risk_level = "Medium"
+            else:
+                risk_level = "Low"
 
         return {
             "prediction": prediction_text,

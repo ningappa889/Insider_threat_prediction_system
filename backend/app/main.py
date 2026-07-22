@@ -7,6 +7,7 @@ from app.api.auth import router as auth_router
 from app.api.alerts import router as alerts_router
 from app.api.predictions import router as prediction_router
 from app.api.stats import router as stats_router
+from app.api.predictions import router as prediction_router
 from app.core.config import settings
 from app.database.init_db import init_db
 
@@ -35,7 +36,7 @@ app.include_router(activities_router)
 app.include_router(alerts_router)
 app.include_router(prediction_router)
 app.include_router(stats_router)
-
+app.include_router(prediction_router)
 @app.on_event("startup")
 def startup():
     init_db()
