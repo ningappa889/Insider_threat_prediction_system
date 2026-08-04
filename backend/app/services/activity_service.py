@@ -143,7 +143,7 @@ class ActivityService:
                 Activity.status == status
             )
 
-        return query.all()
+        return query.order_by(Activity.created_at.desc()).all()
 
     @staticmethod
     def get_activity_by_id(

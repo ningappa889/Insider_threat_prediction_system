@@ -7,7 +7,6 @@ from app.api.auth import router as auth_router
 from app.api.alerts import router as alerts_router
 from app.api.predictions import router as prediction_router
 from app.api.stats import router as stats_router
-from app.api.predictions import router as prediction_router
 from app.core.config import settings
 from app.database.init_db import init_db
 

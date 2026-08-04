@@ -46,12 +46,12 @@ export default function Prediction() {
 
       setResult(response.data);
     } catch (err) {
-  console.log("Status:", err.response?.status);
-  console.log("Response:", err.response?.data);
-  console.log("Headers:", err.config?.headers);
-  console.error(err);
-  alert("Prediction failed.");
-} finally {
+      console.log("Status:", err.response?.status);
+      console.log("Response:", err.response?.data);
+      console.log("Headers:", err.config?.headers);
+      console.error(err);
+      alert("Prediction failed.");
+    } finally {
       setLoading(false);
     }
   };
@@ -59,15 +59,31 @@ export default function Prediction() {
   const getRiskColor = (risk) => {
     switch ((risk || "").toLowerCase()) {
       case "critical":
-        return "error";
+        return {
+          bgcolor: "#d32f2f",
+          color: "#fff",
+        };
+
       case "high":
-        return "warning";
+        return {
+          bgcolor: "#ed6c02",
+          color: "#fff",
+        };
+
       case "medium":
-        return "info";
+        return {
+          bgcolor: "#fbc02d",
+          color: "#000",
+        };
+
       case "low":
-        return "success";
+        return {
+          bgcolor: "#2e7d32",
+          color: "#fff",
+        };
+
       default:
-        return "default";
+        return {};
     }
   };
 
@@ -181,7 +197,12 @@ export default function Prediction() {
 
             <Chip
               label={result.risk_level}
-              color={getRiskColor(result.risk_level)}
+              size="small"
+              sx={{
+                ...getRiskColor(result.risk_level),
+                fontWeight: 600,
+                minWidth: 75,
+              }}
             />
           </Paper>
         )}

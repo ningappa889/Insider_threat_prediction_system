@@ -57,16 +57,17 @@ class MLService:
             else "Normal Activity"
         )
 
-        # Determine risk level based on prediction and risk score
+# Determine risk level based on prediction and confidence
         if prediction == 0:
-            # Normal activity should always have Low risk
+            # Model predicts normal activity
             risk_level = "Low"
         else:
-            if risk_score >= 90:
+            # Model predicts insider threat
+            if confidence >= 90:
                 risk_level = "Critical"
-            elif risk_score >= 70:
+            elif confidence >= 70:
                 risk_level = "High"
-            elif risk_score >= 50:
+            elif confidence >= 50:
                 risk_level = "Medium"
             else:
                 risk_level = "Low"
