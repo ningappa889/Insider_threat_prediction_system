@@ -7,11 +7,11 @@ import {
   TextField,
   MenuItem,
   Button,
-  Grid,
   Chip,
   LinearProgress,
+  Autocomplete,
 } from "@mui/material";
-
+import CircularProgress from "@mui/material/CircularProgress";
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 
@@ -25,6 +25,41 @@ export default function Prediction() {
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const activityTypes = [
+    "LOGIN",
+    "LOGOUT",
+    "FAILED_LOGIN",
+    "REMOTE_LOGIN",
+    "FILE_ACCESS",
+    "FILE_DELETE",
+    "FILE_MODIFICATION",
+    "USB_INSERT",
+    "USB_REMOVE",
+    "EMAIL_SENT",
+    "EMAIL_RECEIVED",
+    "POWERSHELL",
+    "CMD_EXECUTION",
+    "PROCESS_EXECUTION",
+    "NETWORK_SCAN",
+    "PORT_SCAN",
+    "PRIVILEGE_ESCALATION",
+    "ADMIN_PRIVILEGE_CHANGE",
+    "PASSWORD_CHANGE",
+    "APPLICATION_INSTALL",
+    "APPLICATION_UNINSTALL",
+    "SERVICE_START",
+    "SERVICE_STOP",
+    "REGISTRY_CHANGE",
+    "FIREWALL_CHANGE",
+    "VPN_LOGIN",
+    "VPN_LOGOUT",
+    "RDP_LOGIN",
+    "RDP_FAILED_LOGIN",
+    "DATABASE_ACCESS",
+    "DATABASE_EXPORT",
+    "SUSPICIOUS_DOWNLOAD",
+    "MALWARE_DETECTED",
+  ];
 
   const handleChange = (e) => {
     setForm({
@@ -119,42 +154,77 @@ export default function Prediction() {
         </Typography>
 
         <Paper sx={{ p: 4, borderRadius: 3 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                select
-                fullWidth
-                label="Activity Type"
-                name="activity_type"
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns:{ 
+                xs:"1fr",
+                md:"500px 140px 160px 160px 180px",
+              },
+              gap: 2,
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                minWidth: {
+                  xs: "100%",
+                  md: 500,
+                },
+              }}
+            >
+              <Autocomplete
+                disableClearable
+                autoHighlight
+                selectOnFocus
+                options={activityTypes}
                 value={form.activity_type}
-                onChange={handleChange}
-              >
-                <MenuItem value="LOGIN">LOGIN</MenuItem>
-                <MenuItem value="LOGOUT">LOGOUT</MenuItem>
-                <MenuItem value="FILE_ACCESS">FILE_ACCESS</MenuItem>
-                <MenuItem value="USB_INSERT">USB_INSERT</MenuItem>
-                <MenuItem value="EMAIL_SENT">EMAIL_SENT</MenuItem>
-                <MenuItem value="PRIVILEGE_ESCALATION">PRIVILEGE_ESCALATION</MenuItem>
-              </TextField>
-            </Grid>
+                isOptionEqualToValue={(option, value) => option === value}
+                onChange={(event, newValue) =>
+                  setForm({
+                    ...form,
+                    activity_type: newValue || "",
+                  })
+                }
+                ListboxProps={{
+                  style: {
+                    maxHeight: 350,
+                  },
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Activity Type"
+                    placeholder="Search activity..."
+                    fullWidth
+                  />
+                )}
+              />
+            </Box>
 
-            <Grid item xs={12} md={6}>
+            <Box>
               <TextField
                 fullWidth
                 label="Risk Score"
                 type="number"
                 name="risk_score"
                 value={form.risk_score}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
+                    handleChange(e);
+                  }
+                }}
                 inputProps={{
                   min: 0,
                   max: 100,
-                  step: 1,
                 }}
               />
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} md={6}>
+            <Box>
               <TextField
                 select
                 fullWidth
@@ -168,9 +238,9 @@ export default function Prediction() {
                 <MenuItem value="High">High</MenuItem>
                 <MenuItem value="Critical">Critical</MenuItem>
               </TextField>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} md={6}>
+            <Box>
               <TextField
                 select
                 fullWidth
@@ -182,9 +252,9 @@ export default function Prediction() {
                 <MenuItem value="Success">Success</MenuItem>
                 <MenuItem value="Failed">Failed</MenuItem>
               </TextField>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12}>
+            <Box>
               <Button
                 variant="contained"
                 size="large"
@@ -195,10 +265,14 @@ export default function Prediction() {
                   form.risk_score === ""
                 }
               >
-                Predict Threat
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Predict Threat"
+                )}
               </Button>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Paper>
 
         {result && (
