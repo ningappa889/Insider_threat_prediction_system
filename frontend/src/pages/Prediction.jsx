@@ -34,6 +34,18 @@ export default function Prediction() {
   };
 
   const handlePredict = async () => {
+    if (form.activity_type === "") {
+      alert("Please select an Activity Type.");
+      return;
+    }
+
+    if (
+      Number(form.risk_score) < 0 ||
+      Number(form.risk_score) > 100
+    ) {
+      alert("Risk Score must be between 0 and 100.");
+      return;
+    }
     try {
       setLoading(true);
 
@@ -110,12 +122,20 @@ export default function Prediction() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <TextField
+                select
                 fullWidth
                 label="Activity Type"
                 name="activity_type"
                 value={form.activity_type}
                 onChange={handleChange}
-              />
+              >
+                <MenuItem value="LOGIN">LOGIN</MenuItem>
+                <MenuItem value="LOGOUT">LOGOUT</MenuItem>
+                <MenuItem value="FILE_ACCESS">FILE_ACCESS</MenuItem>
+                <MenuItem value="USB_INSERT">USB_INSERT</MenuItem>
+                <MenuItem value="EMAIL_SENT">EMAIL_SENT</MenuItem>
+                <MenuItem value="PRIVILEGE_ESCALATION">PRIVILEGE_ESCALATION</MenuItem>
+              </TextField>
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -126,6 +146,11 @@ export default function Prediction() {
                 name="risk_score"
                 value={form.risk_score}
                 onChange={handleChange}
+                inputProps={{
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                }}
               />
             </Grid>
 
@@ -162,8 +187,13 @@ export default function Prediction() {
             <Grid item xs={12}>
               <Button
                 variant="contained"
+                size="large"
                 onClick={handlePredict}
-                disabled={loading}
+                disabled={
+                  loading ||
+                  form.activity_type === "" ||
+                  form.risk_score === ""
+                }
               >
                 Predict Threat
               </Button>
@@ -174,7 +204,7 @@ export default function Prediction() {
         {result && (
           <Paper sx={{ mt: 4, p: 4, borderRadius: 3 }}>
             <Typography variant="h6" gutterBottom>
-              Prediction Result
+              AI Prediction Result
             </Typography>
 
             <Typography sx={{ mb: 2 }}>
@@ -204,6 +234,21 @@ export default function Prediction() {
                 minWidth: 75,
               }}
             />
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Recommendation
+              </Typography>
+
+              <Typography>
+                {result.risk_level === "Critical"
+                  ? "Immediately investigate the user and restrict system access."
+                  : result.risk_level === "High"
+                  ? "Review recent activities and monitor the user closely."
+                  : result.risk_level === "Medium"
+                  ? "Continue monitoring for suspicious behavior."
+                  : "No immediate action required."}
+              </Typography>
+            </Box>
           </Paper>
         )}
       </Box>
