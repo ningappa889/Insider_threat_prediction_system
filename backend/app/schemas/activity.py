@@ -16,7 +16,7 @@ class ActivityBase(BaseModel):
 
 
 class ActivityCreate(ActivityBase):
-    pass
+    risk_score: int = 0
 
 
 class ActivityResponse(ActivityBase):

@@ -40,9 +40,8 @@ class ActivityService:
         activity: ActivityCreate
     ):
 
-        risk_score, severity = ActivityService.calculate_risk(
-            activity.activity_type
-        )
+        risk_score = activity.risk_score
+        severity = activity.severity
 
         new_activity = Activity(
             user_id=current_user.id,

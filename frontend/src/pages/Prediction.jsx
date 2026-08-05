@@ -74,28 +74,38 @@ export default function Prediction() {
       return;
     }
 
-    if (
-      Number(form.risk_score) < 0 ||
-      Number(form.risk_score) > 100
-    ) {
+    if (Number(form.risk_score) < 0 || Number(form.risk_score) > 100) {
       alert("Risk Score must be between 0 and 100.");
       return;
     }
+
     try {
       setLoading(true);
 
-      const response = await api.post("/predict/", {
+      // Step 1: Get AI Prediction
+      const predictionResponse = await api.post("/predict/", {
         activity_type: form.activity_type,
         risk_score: Number(form.risk_score),
         severity: form.severity,
         status: form.status,
       });
 
-      setResult(response.data);
+      setResult(predictionResponse.data);
+
+      // Step 2: Save prediction into Activities table
+      await api.post("/activities/", {
+        activity_type: form.activity_type,
+        description: `AI Prediction: ${predictionResponse.data.prediction}`,
+        severity: predictionResponse.data.risk_level,
+        risk_score: Number(form.risk_score),
+        status: form.status,
+        source_ip: "127.0.0.1",
+        device_name: "Web Dashboard",
+        file_name: null,
+        process_name: null,
+      });
+
     } catch (err) {
-      console.log("Status:", err.response?.status);
-      console.log("Response:", err.response?.data);
-      console.log("Headers:", err.config?.headers);
       console.error(err);
       alert("Prediction failed.");
     } finally {
@@ -159,7 +169,7 @@ export default function Prediction() {
               display: "grid",
               gridTemplateColumns:{ 
                 xs:"1fr",
-                md:"500px 140px 160px 160px 180px",
+                md:"300px 140px 160px 160px 180px",
               },
               gap: 2,
               alignItems: "center",
@@ -170,7 +180,7 @@ export default function Prediction() {
                 width: "100%",
                 minWidth: {
                   xs: "100%",
-                  md: 500,
+                  md: 300,
                 },
               }}
             >
