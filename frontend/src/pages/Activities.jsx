@@ -12,6 +12,9 @@ import {
   TableRow,
   Chip,
   CircularProgress,
+  TextField,
+  MenuItem,
+  
 } from "@mui/material";
 
 import Sidebar from "../components/Sidebar";
@@ -19,16 +22,59 @@ import api from "../services/api";
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
+  const [filteredActivities, setFilteredActivities] = useState([]);
+
   const [loading, setLoading] = useState(true);
+
+  const [search, setSearch] = useState("");
+  const [severityFilter, setSeverityFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   useEffect(() => {
     fetchActivities();
   }, []);
+  useEffect(() => {
+    let filtered = [...activities];
+
+    if (search.trim() !== "") {
+      filtered = filtered.filter((activity) =>
+        activity.activity_type
+          ?.toLowerCase()
+          .includes(search.toLowerCase())
+      );
+    }
+
+    if (severityFilter !== "All") {
+      filtered = filtered.filter(
+        (activity) =>
+          activity.severity === severityFilter
+      );
+    }
+
+    if (statusFilter !== "All") {
+      filtered = filtered.filter(
+        (activity) =>
+          activity.status === statusFilter
+      );
+    }
+
+    setFilteredActivities(filtered);
+
+  }, [
+    search,
+    severityFilter,
+    statusFilter,
+    activities,
+  ]);
 
   const fetchActivities = async () => {
     try {
       const response = await api.get("/activities/");
+
+      console.log("Activities API:", response.data);
+
       setActivities(response.data);
+      setFilteredActivities(response.data);
     } catch (err) {
       console.error("Failed to load activities:", err);
     } finally {
@@ -80,6 +126,47 @@ export default function Activities() {
         <Typography variant="h4" fontWeight="bold" gutterBottom>
           Activities
         </Typography>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gap: 2,
+          mb: 3,
+        }}
+      >
+        <TextField
+          fullWidth
+          label="Search Activity"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <TextField
+          select
+          fullWidth
+          label="Severity"
+          value={severityFilter}
+          onChange={(e) => setSeverityFilter(e.target.value)}
+        >
+          <MenuItem value="All">All</MenuItem>
+          <MenuItem value="Low">Low</MenuItem>
+          <MenuItem value="Medium">Medium</MenuItem>
+          <MenuItem value="High">High</MenuItem>
+          <MenuItem value="Critical">Critical</MenuItem>
+        </TextField>
+
+        <TextField
+          select
+          fullWidth
+          label="Status"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <MenuItem value="All">All</MenuItem>
+          <MenuItem value="Success">Success</MenuItem>
+          <MenuItem value="Failed">Failed</MenuItem>
+        </TextField>
+      </Box>
 
         <Paper sx={{ p: 3, borderRadius: 3 }}>
           {loading ? (
@@ -87,7 +174,17 @@ export default function Activities() {
               <CircularProgress />
             </Box>
           ) : (
-            <TableContainer>
+            <>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 2 }}
+              >
+                Showing {filteredActivities.length} of {activities.length} activities
+              </Typography>
+
+              <TableContainer>
+              
               <Table>
                 <TableHead>
                   <TableRow>
@@ -101,14 +198,14 @@ export default function Activities() {
                 </TableHead>
 
                 <TableBody>
-                  {activities.length === 0 ? (
+                  {filteredActivities.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} align="center">
                         No activities found.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    activities.map((activity) => (
+                    filteredActivities.map((activity) => (
                       <TableRow key={activity.id}>
                         <TableCell>{activity.id}</TableCell>
                         <TableCell>{activity.activity_type}</TableCell>
@@ -125,9 +222,10 @@ export default function Activities() {
                       </TableRow>
                     ))
                   )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
           )}
         </Paper>
       </Box>
