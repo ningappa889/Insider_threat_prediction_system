@@ -3,8 +3,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.database.database import Base
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-
+def indian_time():
+    return datetime.now(ZoneInfo("Asia/Kolkata"))
 class Activity(Base):
     __tablename__ = "activities"
 
@@ -33,8 +36,8 @@ class Activity(Base):
     status = Column(String(20), default="Success")
 
     created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now()
+        DateTime,
+        default=indian_time
     )
 
     user = relationship(

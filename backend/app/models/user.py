@@ -1,9 +1,11 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
-from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database.database import Base
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-
+def indian_time():
+    return datetime.now(ZoneInfo("Asia/Kolkata"))
 class User(Base):
     __tablename__ = "users"
 
@@ -25,4 +27,7 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(
+        DateTime,
+        default=indian_time
+    )

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -104,6 +104,22 @@ export default function Login() {
             disabled={loading}
           >
             {loading ? "Logging in..." : "LOGIN"}
+          </Button>
+          <Typography
+            align="center"
+            sx={{ mt: 3 }}
+          >
+            Don't have an account?
+          </Typography>
+
+          <Button
+            component={Link}
+            to="/register"
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 1 }}
+          >
+            Create Account
           </Button>
         </CardContent>
       </Card>
