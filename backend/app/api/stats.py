@@ -70,12 +70,56 @@ def get_dashboard_stats():
             .order_by(func.date(Activity.created_at))
             .all()
         )
+        # Average Risk Score
+        average_risk_score = (
+            db.query(func.avg(Activity.risk_score))
+            .scalar() or 0
+        )
+
+        # Top 5 Activity Types
+        top_activity_types = (
+            db.query(
+                Activity.activity_type,
+                func.count(Activity.id).label("count")
+            )
+            .group_by(Activity.activity_type)
+            .order_by(func.count(Activity.id).desc())
+            .limit(5)
+            .all()
+        )
+
+        # Critical Alerts
+        critical_alerts = (
+            db.query(func.count(Alert.id))
+            .filter(Alert.severity == "Critical")
+            .scalar() or 0
+        )
+
+        # High Risk Activities
+        high_risk_activities = (
+            db.query(func.count(Activity.id))
+            .filter(Activity.risk_score >= 70)
+            .scalar() or 0
+        )
 
         return {
             "total_users": total_users,
             "total_activities": total_activities,
             "total_alerts": total_alerts,
             "high_risk_users": high_risk_users,
+            "average_risk_score": round(average_risk_score, 2),
+
+            "critical_alerts": critical_alerts,
+
+            "high_risk_activities": high_risk_activities,
+
+            "top_activity_types": [
+                {
+                    "activity": activity,
+                    "count": count,
+                }
+                for activity, count in top_activity_types
+            ],
 
             "severity_distribution": [
                 {

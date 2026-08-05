@@ -11,6 +11,7 @@ import Sidebar from "../components/Sidebar";
 import RiskTrendChart from "../components/RiskTrendChart";
 import AlertSeverityChart from "../components/AlertSeverityChart";
 import api from "../services/api";
+import TopActivityChart from "../components/TopActivityChart";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -20,11 +21,18 @@ export default function Dashboard() {
     total_activities: 0,
     total_alerts: 0,
     high_risk_users: 0,
+
+    average_risk_score: 0,
+    critical_alerts: 0,
+    high_risk_activities: 0,
+
     severity_distribution: [],
     activity_trend: [],
+    top_activity_types: [],
+
     recent_alerts: [],
     recent_activities: [],
-  });
+});
 
   useEffect(() => {
     loadStats();
@@ -127,6 +135,20 @@ export default function Dashboard() {
           <StatCard
             title="High Risk Users"
             value={stats.high_risk_users}
+          />
+          <StatCard
+            title="Avg Risk Score"
+            value={stats.average_risk_score}
+          />
+
+          <StatCard
+            title="Critical Alerts"
+            value={stats.critical_alerts}
+          />
+
+          <StatCard
+            title="High Risk Activities"
+            value={stats.high_risk_activities}
           />
         </Box>
 
@@ -276,6 +298,22 @@ export default function Dashboard() {
               </Box>
             ))
           )}
+        </Paper>
+        <Paper
+          elevation={3}
+          sx={{
+            mt: 3,
+            p: 3,
+            borderRadius: 3,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Top Activity Types
+          </Typography>
+
+          <TopActivityChart
+            data={stats.top_activity_types}
+          />
         </Paper>
       </Box>
     </Box>
