@@ -14,8 +14,10 @@ import {
   CircularProgress,
   TextField,
   MenuItem,
-  
+  Button,
 } from "@mui/material";
+
+import DownloadIcon from "@mui/icons-material/Download";
 
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
@@ -23,7 +25,6 @@ import api from "../services/api";
 export default function Activities() {
   const [activities, setActivities] = useState([]);
   const [filteredActivities, setFilteredActivities] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -33,6 +34,7 @@ export default function Activities() {
   useEffect(() => {
     fetchActivities();
   }, []);
+
   useEffect(() => {
     let filtered = [...activities];
 
@@ -46,33 +48,22 @@ export default function Activities() {
 
     if (severityFilter !== "All") {
       filtered = filtered.filter(
-        (activity) =>
-          activity.severity === severityFilter
+        (activity) => activity.severity === severityFilter
       );
     }
 
     if (statusFilter !== "All") {
       filtered = filtered.filter(
-        (activity) =>
-          activity.status === statusFilter
+        (activity) => activity.status === statusFilter
       );
     }
 
     setFilteredActivities(filtered);
-
-  }, [
-    search,
-    severityFilter,
-    statusFilter,
-    activities,
-  ]);
+  }, [activities, search, severityFilter, statusFilter]);
 
   const fetchActivities = async () => {
     try {
       const response = await api.get("/activities/");
-
-      console.log("Activities API:", response.data);
-
       setActivities(response.data);
       setFilteredActivities(response.data);
     } catch (err) {
@@ -89,13 +80,13 @@ export default function Activities() {
       case "medium":
         return "warning";
       case "high":
-        return "error";
       case "critical":
         return "error";
       default:
         return "default";
     }
   };
+
   const formatDate = (dateString) => {
     if (!dateString) return "-";
 
@@ -106,6 +97,50 @@ export default function Activities() {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const exportCSV = () => {
+    const headers = [
+      "Activity Type",
+      "Severity",
+      "Risk Score",
+      "Status",
+      "User ID",
+      "Created At",
+    ];
+
+    const rows = filteredActivities.map((activity) => [
+      activity.activity_type,
+      activity.severity,
+      activity.risk_score,
+      activity.status,
+      activity.user_id,
+      formatDate(activity.created_at),
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    const today = new Date().toISOString().split("T")[0];
+    link.download = `activities_${today}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
   };
 
   return (
@@ -123,105 +158,172 @@ export default function Activities() {
       >
         <Toolbar />
 
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          gutterBottom
+        >
           Activities
         </Typography>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <TextField
-          fullWidth
-          label="Search Activity"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
 
-        <TextField
-          select
-          fullWidth
-          label="Severity"
-          value={severityFilter}
-          onChange={(e) => setSeverityFilter(e.target.value)}
+        {/* Filters */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(250px,1fr))",
+            gap: 2,
+            mb: 3,
+          }}
         >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Low">Low</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="High">High</MenuItem>
-          <MenuItem value="Critical">Critical</MenuItem>
-        </TextField>
+          <TextField
+            fullWidth
+            label="Search Activity"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
-        <TextField
-          select
-          fullWidth
-          label="Status"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          <TextField
+            select
+            fullWidth
+            label="Severity"
+            value={severityFilter}
+            onChange={(e) =>
+              setSeverityFilter(e.target.value)
+            }
+          >
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="Low">Low</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+            <MenuItem value="Critical">Critical</MenuItem>
+          </TextField>
+
+          <TextField
+            select
+            fullWidth
+            label="Status"
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(e.target.value)
+            }
+          >
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="Success">Success</MenuItem>
+            <MenuItem value="Failed">Failed</MenuItem>
+          </TextField>
+        </Box>
+
+        <Paper
+          sx={{
+            p: 3,
+            borderRadius: 3,
+          }}
         >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Success">Success</MenuItem>
-          <MenuItem value="Failed">Failed</MenuItem>
-        </TextField>
-      </Box>
-
-        <Paper sx={{ p: 3, borderRadius: 3 }}>
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 5,
+              }}
+            >
               <CircularProgress />
             </Box>
           ) : (
             <>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ mb: 2 }}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
               >
-                Showing {filteredActivities.length} of {activities.length} activities
-              </Typography>
+                <Typography
+                  color="text.secondary"
+                >
+                  Showing {filteredActivities.length} of{" "}
+                  {activities.length} activities
+                </Typography>
+
+                <Button
+                  variant="contained"
+                  startIcon={<DownloadIcon />}
+                  onClick={exportCSV}
+                >
+                  Export CSV
+                </Button>
+              </Box>
 
               <TableContainer>
-              
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell><b>ID</b></TableCell>
-                    <TableCell><b>Activity</b></TableCell>
-                    <TableCell><b>Risk Score</b></TableCell>
-                    <TableCell><b>Severity</b></TableCell>
-                    <TableCell><b>Status</b></TableCell>
-                    <TableCell><b>User ID</b></TableCell>
-                    <TableCell><b>Created At</b></TableCell>                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {filteredActivities.length === 0 ? (
+                <Table stickyHeader>
+                  <TableHead>
                     <TableRow>
-                      <TableCell colSpan={7} align="center">
-                        No activities found.
-                      </TableCell>
+                      <TableCell><b>ID</b></TableCell>
+                      <TableCell><b>Activity</b></TableCell>
+                      <TableCell><b>Risk Score</b></TableCell>
+                      <TableCell><b>Severity</b></TableCell>
+                      <TableCell><b>Status</b></TableCell>
+                      <TableCell><b>User ID</b></TableCell>
+                      <TableCell><b>Created At</b></TableCell>
                     </TableRow>
-                  ) : (
-                    filteredActivities.map((activity) => (
-                      <TableRow key={activity.id}>
-                        <TableCell>{activity.id}</TableCell>
-                        <TableCell>{activity.activity_type}</TableCell>
-                        <TableCell>{activity.risk_score}</TableCell>
-                        <TableCell>
-                          <Chip
-                            label={activity.severity}
-                            color={getSeverityColor(activity.severity)}
-                          />
+                  </TableHead>
+
+                  <TableBody>
+                    {filteredActivities.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          align="center"
+                        >
+                          No activities found.
                         </TableCell>
-                        <TableCell>{activity.status}</TableCell>
-                        <TableCell>{activity.user_id}</TableCell>
-                        <TableCell>{formatDate(activity.created_at)}</TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    ) : (
+                      filteredActivities.map((activity) => (
+                        <TableRow
+                          key={activity.id}
+                          hover
+                        >
+                          <TableCell>
+                            {activity.id}
+                          </TableCell>
+
+                          <TableCell>
+                            {activity.activity_type}
+                          </TableCell>
+
+                          <TableCell>
+                            {activity.risk_score}
+                          </TableCell>
+
+                          <TableCell>
+                            <Chip
+                              label={activity.severity}
+                              color={getSeverityColor(
+                                activity.severity
+                              )}
+                              size="small"
+                            />
+                          </TableCell>
+
+                          <TableCell>
+                            {activity.status}
+                          </TableCell>
+
+                          <TableCell>
+                            {activity.user_id}
+                          </TableCell>
+
+                          <TableCell>
+                            {formatDate(
+                              activity.created_at
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -12,6 +12,7 @@ import {
   TableRow,
   Chip,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 
 import Sidebar from "../components/Sidebar";
@@ -20,6 +21,7 @@ import api from "../services/api";
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -35,6 +37,13 @@ export default function Users() {
       setLoading(false);
     }
   };
+
+  // Search Filter
+  const filteredUsers = users.filter(
+    (user) =>
+      user.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+  );
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
@@ -69,71 +78,108 @@ export default function Users() {
 
         <Paper sx={{ p: 3, borderRadius: 3 }}>
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 4,
+              }}
+            >
               <CircularProgress />
             </Box>
           ) : (
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell><b>ID</b></TableCell>
-                    <TableCell><b>Name</b></TableCell>
-                    <TableCell><b>Email</b></TableCell>
-                    <TableCell><b>Department</b></TableCell>
-                    <TableCell><b>Role</b></TableCell>
-                    <TableCell><b>Status</b></TableCell>
-                    <TableCell><b>Joined</b></TableCell>
-                  </TableRow>
-                </TableHead>
+            <>
+              <TextField
+                fullWidth
+                label="Search Users"
+                placeholder="Search by name or email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                sx={{ mb: 3 }}
+              />
 
-                <TableBody>
-                  {users.length === 0 ? (
+              <TableContainer>
+                <Table>
+                  <TableHead>
                     <TableRow>
-                      <TableCell colSpan={7} align="center">
-                        No users found.
+                      <TableCell>
+                        <b>ID</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Name</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Email</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Department</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Role</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Status</b>
+                      </TableCell>
+
+                      <TableCell>
+                        <b>Joined</b>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    users.map((user) => (
-                      <TableRow key={user.id} hover>
-                        <TableCell>{user.id}</TableCell>
+                  </TableHead>
 
-                        <TableCell>{user.full_name}</TableCell>
-
-                        <TableCell>{user.email}</TableCell>
-
-                        <TableCell>
-                          {user.department || "-"}
-                        </TableCell>
-
-                        <TableCell>{user.role}</TableCell>
-
-                        <TableCell>
-                          <Chip
-                            label={
-                              user.is_active
-                                ? "Active"
-                                : "Inactive"
-                            }
-                            color={
-                              user.is_active
-                                ? "success"
-                                : "error"
-                            }
-                            size="small"
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          {formatDate(user.created_at)}
+                  <TableBody>
+                    {filteredUsers.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} align="center">
+                          No users found.
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    ) : (
+                      filteredUsers.map((user) => (
+                        <TableRow key={user.id} hover>
+                          <TableCell>{user.id}</TableCell>
+
+                          <TableCell>{user.full_name}</TableCell>
+
+                          <TableCell>{user.email}</TableCell>
+
+                          <TableCell>
+                            {user.department || "-"}
+                          </TableCell>
+
+                          <TableCell>{user.role}</TableCell>
+
+                          <TableCell>
+                            <Chip
+                              label={
+                                user.is_active
+                                  ? "Active"
+                                  : "Inactive"
+                              }
+                              color={
+                                user.is_active
+                                  ? "success"
+                                  : "error"
+                              }
+                              size="small"
+                            />
+                          </TableCell>
+
+                          <TableCell>
+                            {formatDate(user.created_at)}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
           )}
         </Paper>
       </Box>
