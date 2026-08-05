@@ -9,6 +9,7 @@ import {
 
 import Sidebar from "../components/Sidebar";
 import RiskTrendChart from "../components/RiskTrendChart";
+import AlertSeverityChart from "../components/AlertSeverityChart";
 import api from "../services/api";
 
 export default function Dashboard() {
@@ -19,6 +20,8 @@ export default function Dashboard() {
     total_activities: 0,
     total_alerts: 0,
     high_risk_users: 0,
+    severity_distribution: [],
+    activity_trend: [],
     recent_alerts: [],
     recent_activities: [],
   });
@@ -97,12 +100,11 @@ export default function Dashboard() {
           Insider Threat Prediction Dashboard
         </Typography>
 
-        {/* Statistics Cards */}
+        {/* Statistics */}
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit,minmax(200px,1fr))",
+            gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
             gap: 3,
             mb: 3,
           }}
@@ -128,15 +130,15 @@ export default function Dashboard() {
           />
         </Box>
 
-        {/* Middle Section */}
+        {/* Charts & Alerts */}
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "2fr 1fr",
+            gridTemplateColumns: "2fr 1fr 1fr",
             gap: 3,
             mb: 3,
 
-            "@media (max-width:900px)": {
+            "@media (max-width:1200px)": {
               gridTemplateColumns: "1fr",
             },
           }}
@@ -149,14 +151,30 @@ export default function Dashboard() {
               borderRadius: 3,
             }}
           >
-            <Typography
-              variant="h6"
-              mb={2}
-            >
+            <Typography variant="h6" mb={2}>
               Risk Trend
             </Typography>
 
-            <RiskTrendChart />
+            <RiskTrendChart 
+              data={stats.activity_trend}
+            />
+          </Paper>
+
+          {/* Alert Severity */}
+          <Paper
+            elevation={3}
+            sx={{
+              p: 3,
+              borderRadius: 3,
+            }}
+          >
+            <Typography variant="h6" mb={2}>
+              Alert Severity
+            </Typography>
+
+            <AlertSeverityChart
+              data={stats.severity_distribution}
+            />
           </Paper>
 
           {/* Recent Alerts */}
@@ -167,10 +185,7 @@ export default function Dashboard() {
               borderRadius: 3,
             }}
           >
-            <Typography
-              variant="h6"
-              mb={2}
-            >
+            <Typography variant="h6" mb={2}>
               Recent Alerts
             </Typography>
 
@@ -198,6 +213,15 @@ export default function Dashboard() {
                   >
                     {alert.severity}
                   </Typography>
+
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                  >
+                    {new Date(
+                      alert.created_at
+                    ).toLocaleString("en-IN")}
+                  </Typography>
                 </Box>
               ))
             )}
@@ -212,10 +236,7 @@ export default function Dashboard() {
             borderRadius: 3,
           }}
         >
-          <Typography
-            variant="h6"
-            mb={2}
-          >
+          <Typography variant="h6" mb={2}>
             Recent Activities
           </Typography>
 
@@ -242,6 +263,15 @@ export default function Dashboard() {
                   color="text.secondary"
                 >
                   Risk Score: {activity.risk_score}
+                </Typography>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  {new Date(
+                    activity.created_at
+                  ).toLocaleString("en-IN")}
                 </Typography>
               </Box>
             ))
