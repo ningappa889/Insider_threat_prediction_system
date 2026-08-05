@@ -6,6 +6,7 @@ import Activities from "./pages/Activities";
 import Alerts from "./pages/Alerts";
 import Prediction from "./pages/Prediction";
 import Users from "./pages/Users";
+import Profile from "./pages/Profile";
 export default function App() {
   return (
     <Routes>
@@ -15,6 +16,7 @@ export default function App() {
       <Route path="/alerts" element={<Alerts />} />
       <Route path="/prediction" element={<Prediction />} />
       <Route path="/users" element={<Users />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
-
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
   Drawer,
   List,
@@ -17,6 +17,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const drawerWidth = 240;
 
@@ -46,10 +47,17 @@ const menuItems = [
     icon: <PeopleIcon />,
     path: "/users",
   },
+  {
+    text: "Profile",
+    icon: <AccountCircleIcon />,
+    path: "/profile",
+  },
 ];
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   return (
     <Drawer
@@ -89,7 +97,12 @@ export default function Sidebar() {
           </ListItemButton>
         ))}
 
-        <ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            logout();
+            navigate("/");
+          }}
+        >
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
