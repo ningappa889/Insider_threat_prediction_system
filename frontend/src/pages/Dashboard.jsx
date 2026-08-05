@@ -19,6 +19,8 @@ export default function Dashboard() {
     total_activities: 0,
     total_alerts: 0,
     high_risk_users: 0,
+    recent_alerts: [],
+    recent_activities: [],
   });
 
   useEffect(() => {
@@ -95,8 +97,7 @@ export default function Dashboard() {
           Insider Threat Prediction Dashboard
         </Typography>
 
-        {/* Statistics */}
-
+        {/* Statistics Cards */}
         <Box
           sx={{
             display: "grid",
@@ -128,7 +129,6 @@ export default function Dashboard() {
         </Box>
 
         {/* Middle Section */}
-
         <Box
           sx={{
             display: "grid",
@@ -141,6 +141,7 @@ export default function Dashboard() {
             },
           }}
         >
+          {/* Risk Trend */}
           <Paper
             elevation={3}
             sx={{
@@ -158,6 +159,7 @@ export default function Dashboard() {
             <RiskTrendChart />
           </Paper>
 
+          {/* Recent Alerts */}
           <Paper
             elevation={3}
             sx={{
@@ -172,14 +174,37 @@ export default function Dashboard() {
               Recent Alerts
             </Typography>
 
-            <Typography color="text.secondary">
-              Live alerts will appear here.
-            </Typography>
+            {stats.recent_alerts.length === 0 ? (
+              <Typography color="text.secondary">
+                No alerts found.
+              </Typography>
+            ) : (
+              stats.recent_alerts.map((alert, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    mb: 2,
+                    pb: 1,
+                    borderBottom: "1px solid #eee",
+                  }}
+                >
+                  <Typography fontWeight="bold">
+                    {alert.alert_type}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {alert.severity}
+                  </Typography>
+                </Box>
+              ))
+            )}
           </Paper>
         </Box>
 
-        {/* Bottom */}
-
+        {/* Recent Activities */}
         <Paper
           elevation={3}
           sx={{
@@ -194,9 +219,33 @@ export default function Dashboard() {
             Recent Activities
           </Typography>
 
-          <Typography color="text.secondary">
-            Live activities will appear here.
-          </Typography>
+          {stats.recent_activities.length === 0 ? (
+            <Typography color="text.secondary">
+              No activities found.
+            </Typography>
+          ) : (
+            stats.recent_activities.map((activity, index) => (
+              <Box
+                key={index}
+                sx={{
+                  mb: 2,
+                  pb: 1,
+                  borderBottom: "1px solid #eee",
+                }}
+              >
+                <Typography fontWeight="bold">
+                  {activity.activity_type}
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Risk Score: {activity.risk_score}
+                </Typography>
+              </Box>
+            ))
+          )}
         </Paper>
       </Box>
     </Box>

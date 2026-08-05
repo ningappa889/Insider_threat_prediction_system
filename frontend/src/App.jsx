@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Activities from "./pages/Activities";
 import Alerts from "./pages/Alerts";
 import Prediction from "./pages/Prediction";
-
+import Users from "./pages/Users";
 export default function App() {
   return (
     <Routes>
@@ -14,6 +14,7 @@ export default function App() {
       <Route path="/activities" element={<Activities />} />
       <Route path="/alerts" element={<Alerts />} />
       <Route path="/prediction" element={<Prediction />} />
+      <Route path="/users" element={<Users />} />
     </Routes>
   );
 }
