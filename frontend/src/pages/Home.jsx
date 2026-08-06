@@ -1063,19 +1063,21 @@ export default function Home() {
 
                 {/* Email */}
                 <IconButton
-                    component="a"
-                    href="mailto:ningappahirekudi889@gmail.com"
-                    sx={{
+                  component="a"
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=ningappahirekudi889@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
                     color: COLORS.text,
                     border: "1px solid rgba(255,255,255,0.15)",
                     "&:hover": {
-                        color: COLORS.accent,
-                        bgcolor: "rgba(56,189,248,0.12)",
-                        borderColor: COLORS.accent,
+                      color: COLORS.accent,
+                      bgcolor: "rgba(56,189,248,0.12)",
+                      borderColor: COLORS.accent,
                     },
-                    }}
+                  }}
                 >
-                    <EmailIcon />
+                  <EmailIcon />
                 </IconButton>
             </Stack>
             </Grid>
