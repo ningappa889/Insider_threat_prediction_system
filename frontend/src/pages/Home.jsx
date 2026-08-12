@@ -826,30 +826,26 @@ export default function Home() {
             </Grid>
 
             <Grid item xs={12} md={7}>
-              {/*
-                DASHBOARD SCREENSHOT PLACEHOLDER
-                Replace the Box below with an <img src="/dashboard-screenshot.png" /> 
-                or similar once a real dashboard screenshot is available.
-              */}
               <Box
+                component="img"
+                src="/dashboard.png"
+                alt="SOC Dashboard Preview"
                 sx={{
-                  bgcolor: COLORS.background,
-                  border: "1px solid rgba(56, 189, 248, 0.25)",
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: 440,
+                  objectFit: "cover",
+                  objectPosition: "top left",
                   borderRadius: "16px",
-                  height: { xs: 260, md: 360 },
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 1.5,
-                  boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
+                  border: "1px solid rgba(56, 189, 248, 0.3)",
+                  boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(56, 189, 248, 0.15)",
+                  transition: "transform 0.3s ease, border-color 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.01)",
+                    borderColor: COLORS.accent,
+                  },
                 }}
-              >
-                <DashboardCustomizeOutlinedIcon sx={{ fontSize: 54, color: COLORS.accent }} />
-                <Typography sx={{ color: COLORS.text, fontSize: "0.92rem" }}>
-                  Dashboard preview placeholder
-                </Typography>
-              </Box>
+              />
             </Grid>
           </Grid>
         </Container>
