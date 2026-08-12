@@ -17,7 +17,7 @@ An AI-powered **Insider Threat Prediction System** that monitors user activities
 | Service | URL |
 |---------|-----|
 | 🌐 Frontend | https://insider-threat-prediction-system.vercel.app |
-| ⚙️ Backend API | https://insider-threat-backend-z0f0.onrender.com/docs |
+| ⚙️ Backend API | https://insider-threat-backend-z0f0.onrender.com |
 | 📘 API Documentation | https://insider-threat-backend-z0f0.onrender.com/docs |
 
 > **Note:** The backend is hosted on Render's free tier. The first request after inactivity may take 30–60 seconds while the service starts.
