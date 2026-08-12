@@ -101,12 +101,21 @@ export default function Alerts() {
   const formatDate = (dateString) => {
     if (!dateString) return "-";
 
-    return new Date(dateString).toLocaleString("en-IN", {
+    const utcString =
+      typeof dateString === "string" &&
+      !dateString.endsWith("Z") &&
+      !dateString.includes("+")
+        ? dateString + "Z"
+        : dateString;
+
+    return new Date(utcString).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
       day: "2-digit",
       month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true,
     });
   };
 

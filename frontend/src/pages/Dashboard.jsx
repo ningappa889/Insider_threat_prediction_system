@@ -49,6 +49,27 @@ export default function Dashboard() {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+
+    const utcString =
+      typeof dateString === "string" &&
+      !dateString.endsWith("Z") &&
+      !dateString.includes("+")
+        ? dateString + "Z"
+        : dateString;
+
+    return new Date(utcString).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   if (loading) {
     return (
       <Box
@@ -240,9 +261,7 @@ export default function Dashboard() {
                     variant="caption"
                     color="text.secondary"
                   >
-                    {new Date(
-                      alert.created_at
-                    ).toLocaleString("en-IN")}
+                    {formatDate(alert.created_at)}
                   </Typography>
                 </Box>
               ))
@@ -291,9 +310,7 @@ export default function Dashboard() {
                   variant="caption"
                   color="text.secondary"
                 >
-                  {new Date(
-                    activity.created_at
-                  ).toLocaleString("en-IN")}
+                  {formatDate(activity.created_at)}
                 </Typography>
               </Box>
             ))

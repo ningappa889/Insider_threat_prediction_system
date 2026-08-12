@@ -37,7 +37,15 @@ export default function Profile() {
   const formatDate = (date) => {
     if (!date) return "-";
 
-    return new Date(date).toLocaleString("en-IN", {
+    const utcString =
+      typeof date === "string" &&
+      !date.endsWith("Z") &&
+      !date.includes("+")
+        ? date + "Z"
+        : date;
+
+    return new Date(utcString).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
       day: "2-digit",
       month: "short",
       year: "numeric",

@@ -1,11 +1,9 @@
+from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
-from app.database.database import Base
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
-def indian_time():
-    return datetime.now(ZoneInfo("Asia/Kolkata"))
+from app.database.database import Base
+
 class User(Base):
     __tablename__ = "users"
 
@@ -29,5 +27,5 @@ class User(Base):
     )
     created_at = Column(
         DateTime,
-        default=indian_time
+        default=datetime.utcnow
     )
