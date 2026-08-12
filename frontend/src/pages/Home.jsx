@@ -117,14 +117,14 @@ const WORKFLOW_STEPS = [
 ];
 
 const TECH_STACK = [
-  { icon: <CodeIcon />, name: "React" },
-  { icon: <BoltOutlinedIcon />, name: "FastAPI" },
-  { icon: <MemoryOutlinedIcon />, name: "Python" },
-  { icon: <DashboardCustomizeOutlinedIcon />, name: "Material UI" },
-  { icon: <KeyOutlinedIcon />, name: "JWT" },
-  { icon: <StorageOutlinedIcon />, name: "SQLite" },
-  { icon: <ModelTrainingOutlinedIcon />, name: "Scikit-Learn" },
-  { icon: <GitHubIcon />, name: "GitHub" },
+  { icon: <CodeIcon />, name: "React", url: "https://react.dev" },
+  { icon: <BoltOutlinedIcon />, name: "FastAPI", url: "https://fastapi.tiangolo.com" },
+  { icon: <MemoryOutlinedIcon />, name: "Python", url: "https://www.python.org" },
+  { icon: <DashboardCustomizeOutlinedIcon />, name: "Material UI", url: "https://mui.com" },
+  { icon: <KeyOutlinedIcon />, name: "JWT", url: "https://jwt.io" },
+  { icon: <StorageOutlinedIcon />, name: "SQLite", url: "https://www.sqlite.org" },
+  { icon: <ModelTrainingOutlinedIcon />, name: "Scikit-Learn", url: "https://scikit-learn.org" },
+  { icon: <GitHubIcon />, name: "GitHub", url: "https://github.com" },
 ];
 
 const WHY_CARDS = [
@@ -752,6 +752,10 @@ export default function Home() {
             {TECH_STACK.map((tech) => (
               <Grid item xs={6} sm={4} md={3} key={tech.name}>
                 <Card
+                  component="a"
+                  href={tech.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   elevation={0}
                   sx={{
                     bgcolor: COLORS.secondary,
@@ -762,10 +766,13 @@ export default function Home() {
                     flexDirection: "column",
                     alignItems: "center",
                     gap: 1.2,
-                    transition: "border-color 0.25s ease, transform 0.25s ease",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    transition: "border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease",
                     "&:hover": {
-                      borderColor: "rgba(56, 189, 248, 0.4)",
+                      borderColor: "rgba(56, 189, 248, 0.5)",
                       transform: "translateY(-4px)",
+                      boxShadow: "0 8px 20px rgba(56, 189, 248, 0.15)",
                     },
                   }}
                 >
@@ -1110,8 +1117,23 @@ export default function Home() {
                 Technology
               </Typography>
               <Stack spacing={1.2}>
-                {TECH_STACK.slice(0, 5).map((tech) => (
-                  <Typography key={tech.name} sx={{ color: COLORS.text, fontSize: "0.86rem" }}>
+                {TECH_STACK.map((tech) => (
+                  <Typography
+                    key={tech.name}
+                    component="a"
+                    href={tech.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: COLORS.text,
+                      fontSize: "0.86rem",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      width: "fit-content",
+                      transition: "color 0.2s ease",
+                      "&:hover": { color: COLORS.accent },
+                    }}
+                  >
                     {tech.name}
                   </Typography>
                 ))}
