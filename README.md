@@ -1,12 +1,13 @@
 # 🛡️ Insider Threat Prediction System
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688?logo=fastapi)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite)
-![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite)
-![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Scikit--learn-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://www.python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite)](https://vitejs.dev)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql)](https://www.postgresql.org)
+[![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite)](https://www.sqlite.org)
+[![Scikit-Learn](https://img.shields.io/badge/Machine%20Learning-Scikit--learn-orange?logo=scikitlearn)](https://scikit-learn.org)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 An AI-powered **Insider Threat Prediction System** that monitors user activities, predicts insider threats using Machine Learning, calculates risk scores, generates security alerts, and provides an interactive Security Operations Center (SOC) dashboard.
 
@@ -20,7 +21,7 @@ An AI-powered **Insider Threat Prediction System** that monitors user activities
 | ⚙️ Backend API | https://insider-threat-backend-z0f0.onrender.com |
 | 📘 API Documentation | https://insider-threat-backend-z0f0.onrender.com/docs |
 
-> **Note:** The backend is hosted on Render's free tier. The first request after inactivity may take 30–60 seconds while the service starts.
+> **Note:** The backend is hosted on Render's free tier. The first request after inactivity may take 30–60 seconds while the service starts up.
 
 ---
 
@@ -32,13 +33,13 @@ The system provides:
 
 - Secure JWT-based authentication
 - User activity monitoring
-- Risk score calculation
-- Security alerts
-- Threat prediction
-- Interactive dashboard with real-time statistics
-- CSV export for activities
-
-The project demonstrates the integration of **FastAPI**, **React**, **SQLite**, **Scikit-learn**, and **REST APIs** in a production-style application.
+- Risk score calculation & threat detection
+- Security alerts management
+- Machine learning prediction engine
+- Interactive SOC dashboard with real-time statistics
+- CSV export for activities and alerts
+- Persistent Cloud Database (PostgreSQL & SQLite) support
+- Indian Standard Time (IST - Asia/Kolkata) timestamp support across all modules
 
 ---
 
@@ -65,6 +66,7 @@ Displays important security statistics including:
 - Average Risk Score
 - Critical Alerts
 - High Risk Activities
+- Live Risk Trend & Alert Distribution Charts
 
 ---
 
@@ -72,8 +74,7 @@ Displays important security statistics including:
 
 - View Activities
 - Search Activities
-- Filter by Severity
-- Filter by Status
+- Filter by Severity & Status
 - Risk Score Display
 - CSV Export
 
@@ -82,9 +83,9 @@ Displays important security statistics including:
 ## 🚨 Alerts
 
 - View Security Alerts
-- Alert Severity
-- Alert Status
-- Alert Details
+- Alert Severity & Status
+- Alert Details & Descriptions
+- CSV Export
 
 ---
 
@@ -125,7 +126,7 @@ Displays important security statistics including:
                   SQLAlchemy ORM
                         │
                         ▼
-                 SQLite Database
+            PostgreSQL / SQLite DB
                         │
                         ▼
           Machine Learning Model
@@ -136,38 +137,41 @@ Displays important security statistics including:
 
 # 🛠️ Technology Stack
 
+Click on any technology below to visit its official documentation:
+
 ## Frontend
 
-- React
-- Vite
-- Material UI
-- React Router
-- Axios
+- [React](https://react.dev)
+- [Vite](https://vitejs.dev)
+- [Material UI](https://mui.com)
+- [React Router](https://reactrouter.com)
+- [Axios](https://axios-http.com)
 
 ## Backend
 
-- FastAPI
-- SQLAlchemy
-- Pydantic
-- JWT Authentication
-- Python
+- [FastAPI](https://fastapi.tiangolo.com)
+- [SQLAlchemy](https://www.sqlalchemy.org)
+- [Pydantic](https://docs.pydantic.dev)
+- [JWT Authentication](https://jwt.io)
+- [Python](https://www.python.org)
 
 ## Database
 
-- SQLite
+- [PostgreSQL (Neon / Supabase)](https://www.postgresql.org)
+- [SQLite](https://www.sqlite.org)
 
 ## Machine Learning
 
-- Scikit-learn
-- Pandas
-- NumPy
-- Joblib
+- [Scikit-learn](https://scikit-learn.org)
+- [Pandas](https://pandas.pydata.org)
+- [NumPy](https://numpy.org)
+- [Joblib](https://joblib.readthedocs.io)
 
 ## Deployment
 
-- Vercel
-- Render
-- GitHub
+- [Vercel](https://vercel.com)
+- [Render](https://render.com)
+- [GitHub](https://github.com)
 
 ---
 
@@ -334,7 +338,7 @@ Backend:
 http://127.0.0.1:8000
 ```
 
-Swagger API:
+Swagger API Documentation:
 
 ```
 http://127.0.0.1:8000/docs
@@ -365,22 +369,22 @@ http://localhost:5173
 ## Backend (.env)
 
 ```env
-APP_NAME=
-APP_VERSION=
+APP_NAME="Insider Threat Prediction System"
+APP_VERSION="1.0.0"
 
-DEBUG=
+DEBUG=True
 
-HOST=
+HOST="127.0.0.1"
 
-PORT=
+PORT=8000
 
-SECRET_KEY=
+SECRET_KEY="your_secret_key_here"
 
-ALGORITHM=
+ALGORITHM="HS256"
 
-ACCESS_TOKEN_EXPIRE_MINUTES=
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
-DATABASE_URL=
+DATABASE_URL="postgresql://username:password@ep-xyz.neon.tech/neondb?sslmode=require"
 ```
 
 ---
@@ -395,35 +399,30 @@ VITE_API_URL=https://insider-threat-backend-z0f0.onrender.com
 
 # 🧪 Testing
 
-The deployed application has been tested for:
+The application has been tested for:
 
-- User Registration
-- User Login
+- User Registration & Login
 - JWT Authentication
-- Dashboard Statistics
-- Activities Page
-- Search & Filters
-- CSV Export
+- Cloud Database Persistence (PostgreSQL & SQLite)
+- Indian Standard Time (IST) formatting
+- Dashboard Statistics & Interactive Charts
+- Activities Search & Severity Filtering
+- CSV Data Export
 - Alerts Page
 - Prediction Module
-- Users Page
-- Profile Page
-- Logout
-- Browser Refresh
-- Cloud Deployment (Render & Vercel)
+- Users & Profile Management
+- Browser Refresh & Cloud Deployment (Render & Vercel)
 
 ---
 
 # 🚀 Future Enhancements
 
-- PostgreSQL Integration
 - Docker Support
 - Role-Based Access Control (RBAC)
 - Email Notifications
 - Multi-Factor Authentication (MFA)
 - AI Model Improvements
-- Audit Logging
-- Real-time Notifications
+- Real-time WebSockets Notifications
 
 ---
 
@@ -437,13 +436,15 @@ Visvesvaraya Technological University (VTU)
 
 GitHub: https://github.com/ningappa889
 
+LinkedIn: https://www.linkedin.com/in/ningappa-hirekudi-892677346
+
 ---
 
 # 📄 License
 
 This project is licensed under the **MIT License**.
 
-See the LICENSE file for more information.
+See the [LICENSE](LICENSE) file for more information.
 
 ---
 
