@@ -1089,7 +1089,7 @@ export default function Home() {
             </Stack>
             </Grid>
 
-            <Grid item xs={6} md={2.5}>
+            <Grid item xs={6} sm={3} md={2}>
               <Typography sx={{ color: COLORS.white, fontWeight: 700, mb: 2, fontSize: "0.9rem" }}>
                 Quick Links
               </Typography>
@@ -1103,6 +1103,7 @@ export default function Home() {
                       fontSize: "0.86rem",
                       cursor: "pointer",
                       width: "fit-content",
+                      transition: "color 0.2s ease",
                       "&:hover": { color: COLORS.accent },
                     }}
                   >
@@ -1112,7 +1113,7 @@ export default function Home() {
               </Stack>
             </Grid>
 
-            <Grid item xs={6} md={2.5}>
+            <Grid item xs={6} sm={3} md={3}>
               <Typography sx={{ color: COLORS.white, fontWeight: 700, mb: 2, fontSize: "0.9rem" }}>
                 Technology
               </Typography>
