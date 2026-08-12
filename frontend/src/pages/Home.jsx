@@ -748,9 +748,9 @@ export default function Home() {
             </Typography>
           </Box>
 
-          <Grid container spacing={2.5}>
+          <Grid container spacing={3} justifyContent="center">
             {TECH_STACK.map((tech) => (
-              <Grid item xs={6} sm={4} md={3} key={tech.name}>
+              <Grid item xs={6} sm={4} md={3} key={tech.name} sx={{ display: "flex", justifyContent: "center" }}>
                 <Card
                   component="a"
                   href={tech.url}
@@ -758,28 +758,32 @@ export default function Home() {
                   rel="noopener noreferrer"
                   elevation={0}
                   sx={{
+                    width: "100%",
                     bgcolor: COLORS.secondary,
-                    borderRadius: "12px",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(255,255,255,0.08)",
                     py: 3.5,
+                    px: 2,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 1.2,
+                    justifyContent: "center",
+                    gap: 1.5,
                     textDecoration: "none",
                     cursor: "pointer",
-                    transition: "border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease",
+                    transition: "all 0.25s ease",
                     "&:hover": {
-                      borderColor: "rgba(56, 189, 248, 0.5)",
-                      transform: "translateY(-4px)",
-                      boxShadow: "0 8px 20px rgba(56, 189, 248, 0.15)",
+                      borderColor: COLORS.accent,
+                      bgcolor: "rgba(16, 42, 67, 0.9)",
+                      transform: "translateY(-6px)",
+                      boxShadow: "0 10px 25px rgba(56, 189, 248, 0.2)",
                     },
                   }}
                 >
-                  <Box sx={{ color: COLORS.accent, fontSize: 30, display: "flex" }}>
+                  <Box sx={{ color: COLORS.accent, fontSize: 36, display: "flex" }}>
                     {tech.icon}
                   </Box>
-                  <Typography sx={{ color: COLORS.white, fontWeight: 600, fontSize: "0.92rem" }}>
+                  <Typography sx={{ color: COLORS.white, fontWeight: 600, fontSize: "0.95rem", textAlign: "center" }}>
                     {tech.name}
                   </Typography>
                 </Card>
