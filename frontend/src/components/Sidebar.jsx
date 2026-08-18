@@ -1,4 +1,5 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   Drawer,
@@ -9,6 +10,12 @@ import {
   Toolbar,
   Typography,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from "@mui/material";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -58,58 +65,117 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+
+  const handleNavClick = (path) => {
+    if (path === "/dashboard") {
+      if (location.pathname === "/dashboard") {
+        window.location.reload();
+      } else {
+        window.location.href = "/dashboard";
+      }
+    } else {
+      navigate(path);
+    }
+  };
+
+  const handleConfirmLogout = () => {
+    setLogoutDialogOpen(false);
+    logout();
+    navigate("/");
+  };
 
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
+    <>
+      <Drawer
+        variant="permanent"
+        sx={{
           width: drawerWidth,
-          boxSizing: "border-box",
-        },
-      }}
-    >
-      <Toolbar>
-        <Box>
-          <Typography variant="h6" fontWeight="bold">
-            Insider Threat
-          </Typography>
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar>
+          <Box>
+            <Typography variant="h6" fontWeight="bold">
+              Insider Threat
+            </Typography>
 
-          <Typography variant="body2">
-            SOC Dashboard
-          </Typography>
-        </Box>
-      </Toolbar>
+            <Typography variant="body2">
+              SOC Dashboard
+            </Typography>
+          </Box>
+        </Toolbar>
 
-      <List>
-        {menuItems.map((item) => (
+        <List>
+          {menuItems.map((item) => (
+            <ListItemButton
+              key={item.text}
+              onClick={() => handleNavClick(item.path)}
+              selected={location.pathname === item.path}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          ))}
+
           <ListItemButton
-            key={item.text}
-            component={Link}
-            to={item.path}
-            selected={location.pathname === item.path}
+            onClick={() => setLogoutDialogOpen(true)}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemIcon>
+              <LogoutIcon color="error" />
+            </ListItemIcon>
 
-            <ListItemText primary={item.text} />
+            <ListItemText primary="Logout" />
           </ListItemButton>
-        ))}
+        </List>
+      </Drawer>
 
-        <ListItemButton
-          onClick={() => {
-            logout();
-            navigate("/");
-          }}
-        >
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
+      {/* Logout Confirmation Dialog */}
+      <Dialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 1,
+            minWidth: 320,
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Confirm Logout
+        </DialogTitle>
 
-          <ListItemText primary="Logout" />
-        </ListItemButton>
-      </List>
-    </Drawer>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to log out of the Insider Threat SOC Dashboard?
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={() => setLogoutDialogOpen(false)}
+            sx={{ borderRadius: 2 }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleConfirmLogout}
+            sx={{ borderRadius: 2 }}
+          >
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
