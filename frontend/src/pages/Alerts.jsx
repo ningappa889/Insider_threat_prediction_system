@@ -163,19 +163,6 @@ export default function Alerts() {
     window.URL.revokeObjectURL(url);
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />
@@ -243,6 +230,18 @@ export default function Alerts() {
             p: 3,
           }}
         >
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 5,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
           <Box
             sx={{
               display: "flex",
@@ -338,6 +337,8 @@ export default function Alerts() {
               </TableBody>
             </Table>
           </TableContainer>
+            </>
+          )}
         </Paper>
       </Box>
     </Box>

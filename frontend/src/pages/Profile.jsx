@@ -52,19 +52,6 @@ export default function Profile() {
     });
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />
@@ -94,7 +81,18 @@ export default function Profile() {
             borderRadius: 3,
           }}
         >
-          <CardContent>
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 5,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : user ? (
+            <CardContent>
 
             <Box
               display="flex"
@@ -166,6 +164,7 @@ export default function Profile() {
             </Typography>
 
           </CardContent>
+          ) : null}
         </Card>
       </Box>
     </Box>

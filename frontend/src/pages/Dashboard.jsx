@@ -70,19 +70,6 @@ export default function Dashboard() {
     });
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   const StatCard = ({ title, value }) => (
     <Paper
       elevation={3}
@@ -128,6 +115,20 @@ export default function Dashboard() {
         >
           Insider Threat Prediction Dashboard
         </Typography>
+
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "50vh",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
 
         {/* Statistics */}
         <Box
@@ -332,6 +333,8 @@ export default function Dashboard() {
             data={stats.top_activity_types}
           />
         </Paper>
+        </>
+        )}
       </Box>
     </Box>
   );
