@@ -2,6 +2,7 @@ import os
 
 import joblib
 import pandas as pd
+from app.services.severity_service import SeverityService
 
 
 class MLService:
@@ -57,20 +58,10 @@ class MLService:
             else "Normal Activity"
         )
 
-# Determine risk level based on prediction and confidence
-        if prediction == 0:
-            # Model predicts normal activity
-            risk_level = "Low"
-        else:
-            # Model predicts insider threat
-            if confidence >= 90:
-                risk_level = "Critical"
-            elif confidence >= 70:
-                risk_level = "High"
-            elif confidence >= 50:
-                risk_level = "Medium"
-            else:
-                risk_level = "Low"
+        # Severity is a property of the event's risk score.  Keeping this
+        # mapping shared with activities and alerts prevents one event from
+        # receiving different severities in different sections of the app.
+        risk_level = SeverityService.from_risk_score(risk_score)
 
         return {
             "prediction": prediction_text,

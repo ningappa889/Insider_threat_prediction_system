@@ -4,20 +4,16 @@ from sqlalchemy.orm import Session
 
 from app.models.alert import Alert
 from app.models.activity import Activity
+from app.services.severity_service import SeverityService
 
 
 class AlertService:
 
     @staticmethod
     def calculate_severity(risk_score: int) -> str:
-        if risk_score >= 75:
-            return "Critical"
-        elif risk_score >= 50:
-            return "High"
-        elif risk_score >= 25:
-            return "Medium"
-        else:
-            return "Low"
+        # Keep this method for callers that already use AlertService, while
+        # delegating to the single shared severity rule.
+        return SeverityService.from_risk_score(risk_score)
 
     @staticmethod
     def create_alert_if_needed(
@@ -31,7 +27,7 @@ class AlertService:
         alert = Alert(
             user_id=activity.user_id,
             alert_type=activity.activity_type,
-            severity=AlertService.calculate_severity(activity.risk_score),
+            severity=SeverityService.from_risk_score(activity.risk_score),
             risk_score=activity.risk_score,
             description=activity.description
         )
@@ -89,7 +85,9 @@ class AlertService:
         alert = Alert(
             user_id=user_id,
             alert_type=alert_type,
-            severity=AlertService.calculate_severity(risk_score),
+            # Behavior alerts follow the same score-based rule as activity
+            # alerts; the old severity argument is retained for compatibility.
+            severity=SeverityService.from_risk_score(risk_score),
             risk_score=risk_score,
             description=description
         )

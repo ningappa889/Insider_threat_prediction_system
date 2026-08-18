@@ -36,7 +36,7 @@ app.include_router(activities_router)
 app.include_router(alerts_router)
 app.include_router(prediction_router)
 app.include_router(stats_router)
-app.include_router(prediction_router)
+
 @app.on_event("startup")
 def startup():
     init_db()

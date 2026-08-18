@@ -5,6 +5,7 @@ from app.models.user import User
 from app.schemas.activity import ActivityCreate
 from app.services.alert_service import AlertService
 from app.services.behavior_service import BehaviorService
+from app.services.severity_service import SeverityService
 
 class ActivityService:
 
@@ -22,14 +23,7 @@ class ActivityService:
 
         risk_score = risk_scores.get(activity_type, 10)
 
-        if risk_score >= 75:
-            severity = "Critical"
-        elif risk_score >= 50:
-            severity = "High"
-        elif risk_score >= 25:
-            severity = "Medium"
-        else:
-            severity = "Low"
+        severity = SeverityService.from_risk_score(risk_score)
 
         return risk_score, severity
 
@@ -41,7 +35,10 @@ class ActivityService:
     ):
 
         risk_score = activity.risk_score
-        severity = activity.severity
+        # Severity is derived from the score so activities and their alerts
+        # always use the same canonical value.  The request field remains
+        # accepted for backwards compatibility with existing clients.
+        severity = SeverityService.from_risk_score(risk_score)
 
         new_activity = Activity(
             user_id=current_user.id,

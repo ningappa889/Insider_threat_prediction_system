@@ -61,11 +61,30 @@ export default function Prediction() {
     "MALWARE_DETECTED",
   ];
 
+  const getSeverityFromScore = (score) => {
+    const num = Number(score || 0);
+    if (num >= 75) return "Critical";
+    if (num >= 50) return "High";
+    if (num >= 25) return "Medium";
+    return "Low";
+  };
+
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleScoreChange = (e) => {
+    const value = e.target.value;
+    if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
+      setForm((prev) => ({
+        ...prev,
+        risk_score: value,
+        severity: value !== "" ? getSeverityFromScore(value) : prev.severity,
+      }));
+    }
   };
 
   const handlePredict = async () => {
@@ -220,13 +239,7 @@ export default function Prediction() {
                 type="number"
                 name="risk_score"
                 value={form.risk_score}
-                onChange={(e) => {
-                  const value = e.target.value;
-
-                  if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
-                    handleChange(e);
-                  }
-                }}
+                onChange={handleScoreChange}
                 inputProps={{
                   min: 0,
                   max: 100,
