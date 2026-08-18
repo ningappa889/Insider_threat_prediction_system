@@ -75,15 +75,32 @@ export default function Activities() {
 
   const getSeverityColor = (severity) => {
     switch ((severity || "").toLowerCase()) {
-      case "low":
-        return "success";
-      case "medium":
-        return "warning";
-      case "high":
       case "critical":
-        return "error";
+        return {
+          bgcolor: "#d32f2f",
+          color: "#fff",
+        };
+
+      case "high":
+        return {
+          bgcolor: "#ed6c02",
+          color: "#fff",
+        };
+
+      case "medium":
+        return {
+          bgcolor: "#fbc02d",
+          color: "#000",
+        };
+
+      case "low":
+        return {
+          bgcolor: "#2e7d32",
+          color: "#fff",
+        };
+
       default:
-        return "default";
+        return {};
     }
   };
 
@@ -310,10 +327,14 @@ export default function Activities() {
                           <TableCell>
                             <Chip
                               label={activity.severity}
-                              color={getSeverityColor(
-                                activity.severity
-                              )}
                               size="small"
+                              sx={{
+                                ...getSeverityColor(
+                                  activity.severity
+                                ),
+                                fontWeight: 600,
+                                minWidth: 80,
+                              }}
                             />
                           </TableCell>
 
