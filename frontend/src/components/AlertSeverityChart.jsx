@@ -7,12 +7,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = [
-  "#d32f2f", // Critical
-  "#ed6c02", // High
-  "#fbc02d", // Medium
-  "#2e7d32", // Low
-];
+const SEVERITY_COLORS = {
+  critical: "#d32f2f",
+  high: "#ed6c02",
+  medium: "#fbc02d",
+  low: "#2e7d32",
+};
+
+const getSeverityColor = (name) => {
+  const key = (name || "").toLowerCase();
+  return SEVERITY_COLORS[key] || "#8884d8";
+};
 
 export default function AlertSeverityChart({ data }) {
   return (
@@ -27,8 +32,8 @@ export default function AlertSeverityChart({ data }) {
         >
           {data.map((entry, index) => (
             <Cell
-              key={index}
-              fill={COLORS[index % COLORS.length]}
+              key={`cell-${index}`}
+              fill={getSeverityColor(entry.name)}
             />
           ))}
         </Pie>
