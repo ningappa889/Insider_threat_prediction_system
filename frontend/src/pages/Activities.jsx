@@ -21,6 +21,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
+import { formatDate } from "../utils/dateFormatter";
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
@@ -104,26 +105,7 @@ export default function Activities() {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
 
-    const utcString =
-      typeof dateString === "string" &&
-      !dateString.endsWith("Z") &&
-      !dateString.includes("+")
-        ? dateString + "Z"
-        : dateString;
-
-    return new Date(utcString).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
 
   const exportCSV = () => {
     const headers = [

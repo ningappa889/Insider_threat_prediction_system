@@ -13,6 +13,7 @@ import {
 
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
+import { formatDate } from "../utils/dateFormatter";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -34,23 +35,7 @@ export default function Profile() {
     }
   };
 
-  const formatDate = (date) => {
-    if (!date) return "-";
 
-    const utcString =
-      typeof date === "string" &&
-      !date.endsWith("Z") &&
-      !date.includes("+")
-        ? date + "Z"
-        : date;
-
-    return new Date(utcString).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
 
   return (
     <Box sx={{ display: "flex" }}>

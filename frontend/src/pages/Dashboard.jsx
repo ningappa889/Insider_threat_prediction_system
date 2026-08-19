@@ -11,7 +11,7 @@ import Sidebar from "../components/Sidebar";
 import RiskTrendChart from "../components/RiskTrendChart";
 import AlertSeverityChart from "../components/AlertSeverityChart";
 import api from "../services/api";
-import TopActivityChart from "../components/TopActivityChart";
+import { formatDate } from "../utils/dateFormatter";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -49,26 +49,7 @@ export default function Dashboard() {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
 
-    const utcString =
-      typeof dateString === "string" &&
-      !dateString.endsWith("Z") &&
-      !dateString.includes("+")
-        ? dateString + "Z"
-        : dateString;
-
-    return new Date(utcString).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
 
   const StatCard = ({ title, value }) => (
     <Paper
