@@ -213,6 +213,9 @@ export default function Activities() {
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
             InputLabelProps={{ shrink: true }}
+            slotProps={{
+              inputLabel: { shrink: true }
+            }}
           />
 
           <TextField
