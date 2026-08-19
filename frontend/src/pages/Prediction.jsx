@@ -61,12 +61,76 @@ export default function Prediction() {
     "MALWARE_DETECTED",
   ];
 
+  const DEFAULT_RISK_SCORES = {
+    LOGIN: 5,
+    LOGOUT: 2,
+    FAILED_LOGIN: 25,
+    REMOTE_LOGIN: 30,
+    FILE_ACCESS: 20,
+    FILE_DELETE: 40,
+    FILE_MODIFICATION: 25,
+    USB_INSERT: 35,
+    USB_REMOVE: 10,
+    EMAIL_SENT: 10,
+    EMAIL_RECEIVED: 5,
+    POWERSHELL: 45,
+    CMD_EXECUTION: 40,
+    PROCESS_EXECUTION: 30,
+    NETWORK_SCAN: 50,
+    PORT_SCAN: 60,
+    PRIVILEGE_ESCALATION: 85,
+    ADMIN_PRIVILEGE_CHANGE: 80,
+    PASSWORD_CHANGE: 15,
+    APPLICATION_INSTALL: 35,
+    APPLICATION_UNINSTALL: 30,
+    SERVICE_START: 25,
+    SERVICE_STOP: 35,
+    REGISTRY_CHANGE: 50,
+    FIREWALL_CHANGE: 65,
+    VPN_LOGIN: 15,
+    VPN_LOGOUT: 5,
+    RDP_LOGIN: 20,
+    RDP_FAILED_LOGIN: 45,
+    DATABASE_ACCESS: 30,
+    DATABASE_EXPORT: 75,
+    SUSPICIOUS_DOWNLOAD: 70,
+    MALWARE_DETECTED: 95,
+  };
+
+  const PRESETS = [
+    { label: "Normal Login", type: "LOGIN", score: 5, status: "Success", color: "success" },
+    { label: "USB Insertion", type: "USB_INSERT", score: 35, status: "Success", color: "warning" },
+    { label: "PowerShell Command", type: "POWERSHELL", score: 45, status: "Success", color: "warning" },
+    { label: "Privilege Escalation", type: "PRIVILEGE_ESCALATION", score: 85, status: "Success", color: "error" },
+    { label: "Malware Detected", type: "MALWARE_DETECTED", score: 95, status: "Failed", color: "error" },
+  ];
+
   const getSeverityFromScore = (score) => {
     const num = Number(score || 0);
     if (num >= 75) return "Critical";
     if (num >= 50) return "High";
     if (num >= 25) return "Medium";
     return "Low";
+  };
+
+  const handleActivityTypeChange = (newValue) => {
+    const type = newValue || "";
+    const defaultScore = DEFAULT_RISK_SCORES[type] !== undefined ? DEFAULT_RISK_SCORES[type] : 10;
+    setForm({
+      activity_type: type,
+      risk_score: defaultScore,
+      severity: getSeverityFromScore(defaultScore),
+      status: form.status,
+    });
+  };
+
+  const applyPreset = (preset) => {
+    setForm({
+      activity_type: preset.type,
+      risk_score: preset.score,
+      severity: getSeverityFromScore(preset.score),
+      status: preset.status,
+    });
   };
 
   const handleChange = (e) => {
@@ -183,6 +247,25 @@ export default function Prediction() {
         </Typography>
 
         <Paper sx={{ p: 4, borderRadius: 3 }}>
+          {/* Quick Preset Scenarios */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
+              Quick Threat Scenarios (Click to Pre-fill):
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {PRESETS.map((preset) => (
+                <Chip
+                  key={preset.label}
+                  label={`${preset.label} (${preset.score})`}
+                  color={preset.color}
+                  variant={form.activity_type === preset.type ? "filled" : "outlined"}
+                  onClick={() => applyPreset(preset)}
+                  sx={{ cursor: "pointer", fontWeight: 600 }}
+                />
+              ))}
+            </Box>
+          </Box>
+
           <Box
             sx={{
               display: "grid",
@@ -210,12 +293,7 @@ export default function Prediction() {
                 options={activityTypes}
                 value={form.activity_type}
                 isOptionEqualToValue={(option, value) => option === value}
-                onChange={(event, newValue) =>
-                  setForm({
-                    ...form,
-                    activity_type: newValue || "",
-                  })
-                }
+                onChange={(event, newValue) => handleActivityTypeChange(newValue)}
                 ListboxProps={{
                   style: {
                     maxHeight: 350,
