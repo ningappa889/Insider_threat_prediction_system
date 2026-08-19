@@ -180,21 +180,26 @@ export default function Prediction() {
       setResult(predictionResponse.data);
 
       // Step 2: Save prediction into Activities table
-      await api.post("/activities/", {
-        activity_type: form.activity_type,
-        description: `AI Prediction: ${predictionResponse.data.prediction}`,
-        severity: predictionResponse.data.risk_level,
-        risk_score: Number(form.risk_score),
-        status: form.status,
-        source_ip: "127.0.0.1",
-        device_name: "Web Dashboard",
-        file_name: null,
-        process_name: null,
-      });
+      try {
+        await api.post("/activities/", {
+          activity_type: form.activity_type,
+          description: `AI Prediction: ${predictionResponse.data.prediction}`,
+          severity: predictionResponse.data.risk_level,
+          risk_score: Number(form.risk_score),
+          status: form.status,
+          source_ip: "127.0.0.1",
+          device_name: "Web Dashboard",
+          file_name: null,
+          process_name: null,
+        });
+      } catch (saveErr) {
+        console.warn("Could not save prediction to activity history:", saveErr);
+      }
 
     } catch (err) {
-      console.error(err);
-      alert("Prediction failed.");
+      console.error("Prediction error:", err);
+      const detail = err.response?.data?.detail || err.message || "Failed to make prediction.";
+      alert(`Prediction failed: ${typeof detail === "object" ? JSON.stringify(detail) : detail}`);
     } finally {
       setLoading(false);
     }

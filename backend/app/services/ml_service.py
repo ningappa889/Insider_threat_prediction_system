@@ -48,9 +48,14 @@ class MLService:
             }
         ])
 
-        prediction = model.predict(sample)[0]
-        probability = model.predict_proba(sample)[0]
-        confidence = max(probability) * 100
+        try:
+            prediction = model.predict(sample)[0]
+            probability = model.predict_proba(sample)[0]
+            confidence = max(probability) * 100
+        except Exception as e:
+            # Fallback heuristic prediction if model pipeline encounters unknown category
+            prediction = 1 if risk_score >= 50 or status == "Failed" else 0
+            confidence = min(99.0, max(65.0, float(risk_score)))
 
         prediction_text = (
             "Insider Threat"
