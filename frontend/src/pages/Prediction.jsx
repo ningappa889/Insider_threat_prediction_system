@@ -10,8 +10,12 @@ import {
   Chip,
   LinearProgress,
   Autocomplete,
+  Alert,
+  AlertTitle,
+  Tooltip,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
 
@@ -246,11 +250,17 @@ export default function Prediction() {
           AI Threat Prediction
         </Typography>
 
+        {/* Onboarding Guide Card for New Users */}
+        <Alert severity="info" icon={<InfoOutlinedIcon fontSize="medium" />} sx={{ mb: 3, borderRadius: 3 }}>
+          <AlertTitle sx={{ fontWeight: 700, fontSize: "1rem" }}>How to Test AI Threat Predictions</AlertTitle>
+          Select a system event (like <b>POWERSHELL</b> or <b>FILE_ACCESS</b>) or click any <b>Quick Threat Scenario</b> button below. The AI Machine Learning model will analyze the action, predict if it is an <b>Insider Threat</b>, and display recommended security actions.
+        </Alert>
+
         <Paper sx={{ p: 4, borderRadius: 3 }}>
           {/* Quick Preset Scenarios */}
           <Box sx={{ mb: 3 }}>
             <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
-              Quick Threat Scenarios (Click to Pre-fill):
+              Quick Threat Scenarios (Click any preset to pre-fill):
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               {PRESETS.map((preset) => (
@@ -274,7 +284,7 @@ export default function Prediction() {
                 md:"300px 140px 160px 160px 180px",
               },
               gap: 2,
-              alignItems: "center",
+              alignItems: "flex-start",
             }}
           >
             <Box
@@ -304,6 +314,7 @@ export default function Prediction() {
                     {...params}
                     label="Activity Type"
                     placeholder="Search activity..."
+                    helperText="What event occurred in the system"
                     fullWidth
                   />
                 )}
@@ -318,6 +329,7 @@ export default function Prediction() {
                 name="risk_score"
                 value={form.risk_score}
                 onChange={handleScoreChange}
+                helperText="Score 0 - 100"
                 inputProps={{
                   min: 0,
                   max: 100,
@@ -333,6 +345,7 @@ export default function Prediction() {
                 name="severity"
                 value={form.severity}
                 onChange={handleChange}
+                helperText="Impact level"
               >
                 <MenuItem value="Low">Low</MenuItem>
                 <MenuItem value="Medium">Medium</MenuItem>
@@ -349,6 +362,7 @@ export default function Prediction() {
                 name="status"
                 value={form.status}
                 onChange={handleChange}
+                helperText="Event result"
               >
                 <MenuItem value="Success">Success</MenuItem>
                 <MenuItem value="Failed">Failed</MenuItem>
