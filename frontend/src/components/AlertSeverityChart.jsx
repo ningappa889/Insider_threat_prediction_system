@@ -19,21 +19,23 @@ const getSeverityColor = (name) => {
   return SEVERITY_COLORS[key] || "#8884d8";
 };
 
-export default function AlertSeverityChart({ data }) {
+export default function AlertSeverityChart({ data = [] }) {
+  const safeData = Array.isArray(data) ? data : [];
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
-          data={data}
+          data={safeData}
           dataKey="value"
           nameKey="name"
           outerRadius={100}
           label
         >
-          {data.map((entry, index) => (
+          {safeData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={getSeverityColor(entry.name)}
+              fill={getSeverityColor(entry?.name)}
             />
           ))}
         </Pie>

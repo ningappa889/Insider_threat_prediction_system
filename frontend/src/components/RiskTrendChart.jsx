@@ -9,13 +9,28 @@ import {
 } from "recharts";
 
 export default function RiskTrendChart({ data = [] }) {
-  const chartData = data.map((item) => ({
-    ...item,
-    date: new Date(item.date).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-    }),
-  }));
+  const safeData = Array.isArray(data) ? data : [];
+
+  const chartData = safeData.map((item) => {
+    let dateLabel = item?.date || "";
+    try {
+      if (item?.date) {
+        const d = new Date(item.date);
+        if (!isNaN(d.getTime())) {
+          dateLabel = d.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+          });
+        }
+      }
+    } catch (e) {
+      dateLabel = String(item?.date || "");
+    }
+    return {
+      ...item,
+      date: dateLabel,
+    };
+  });
 
   return (
     <ResponsiveContainer width="100%" height={300}>

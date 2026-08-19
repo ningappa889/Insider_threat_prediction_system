@@ -214,12 +214,12 @@ export default function Dashboard() {
               Recent Alerts
             </Typography>
 
-            {stats.recent_alerts.length === 0 ? (
+            {(!stats.recent_alerts || stats.recent_alerts.length === 0) ? (
               <Typography color="text.secondary">
                 No alerts found.
               </Typography>
             ) : (
-              stats.recent_alerts.map((alert, index) => (
+              (stats.recent_alerts || []).map((alert, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -263,12 +263,12 @@ export default function Dashboard() {
             Recent Activities
           </Typography>
 
-          {stats.recent_activities.length === 0 ? (
+          {(!stats.recent_activities || stats.recent_activities.length === 0) ? (
             <Typography color="text.secondary">
               No activities found.
             </Typography>
           ) : (
-            stats.recent_activities.map((activity, index) => (
+            (stats.recent_activities || []).map((activity, index) => (
               <Box
                 key={index}
                 sx={{
