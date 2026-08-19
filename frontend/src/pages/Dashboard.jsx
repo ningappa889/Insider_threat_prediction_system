@@ -36,6 +36,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadStats();
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   const loadStats = async () => {
