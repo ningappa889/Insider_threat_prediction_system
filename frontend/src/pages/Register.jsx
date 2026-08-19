@@ -60,7 +60,7 @@ export default function Register() {
 
       alert("Registration successful!");
 
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error(error);
 
@@ -200,7 +200,7 @@ export default function Register() {
             sx={{ mt: 3 }}
           >
             Already have an account?{" "}
-            <Link to="/">Login</Link>
+            <Link to="/login">Login</Link>
           </Typography>
         </CardContent>
       </Card>
