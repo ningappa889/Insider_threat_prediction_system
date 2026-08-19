@@ -37,7 +37,7 @@ def get_all_activities(
     activity_type: Optional[str] = None,
     severity: Optional[str] = None,
     status: Optional[str] = None,
-    limit: int = 50,
+    limit: int = 1000,
     skip: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)

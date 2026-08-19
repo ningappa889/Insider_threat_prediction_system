@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.get("/", response_model=list[AlertResponse])
 def get_alerts(
-    limit: int = 50,
+    limit: int = 1000,
     skip: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
