@@ -20,8 +20,17 @@ class AlertService:
         db: Session,
         activity: Activity
     ):
-        # Ignore very low-risk activities
-        if activity.risk_score < 20:
+        # An activity triggers a security alert only if:
+        # 1. High or Critical risk score (>= 50)
+        # 2. Flagged as an "Insider Threat" by AI prediction
+        # 3. Medium risk score (>= 25) with a Failed status
+        is_high_risk = activity.risk_score >= 50
+        is_ai_threat = "insider threat" in (activity.description or "").lower()
+        is_failed_suspicious_action = (
+            activity.risk_score >= 25 and (activity.status or "").lower() == "failed"
+        )
+
+        if not (is_high_risk or is_ai_threat or is_failed_suspicious_action):
             return None
 
         alert = Alert(

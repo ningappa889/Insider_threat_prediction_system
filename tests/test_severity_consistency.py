@@ -133,3 +133,72 @@ def test_sync_existing_severities_repairs_legacy_rows(monkeypatch):
     finally:
         session.close()
 
+
+def test_routine_activity_does_not_create_alert():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+
+    try:
+        user = User(
+            full_name="Routine User",
+            email="routine@example.com",
+            password="test-password",
+        )
+        session.add(user)
+        session.commit()
+
+        # Routine file access with normal AI prediction
+        activity = ActivityService.create_activity(
+            session,
+            user,
+            ActivityCreate(
+                activity_type="FILE_ACCESS",
+                description="AI Prediction: Normal Activity",
+                risk_score=20,
+                severity="Low",
+                status="Success",
+            ),
+        )
+
+        assert activity.id is not None
+        assert session.query(Alert).count() == 0
+    finally:
+        session.close()
+
+
+def test_ai_threat_prediction_creates_alert():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+
+    try:
+        user = User(
+            full_name="Threat User",
+            email="threat@example.com",
+            password="test-password",
+        )
+        session.add(user)
+        session.commit()
+
+        # AI Prediction flagged as Insider Threat
+        activity = ActivityService.create_activity(
+            session,
+            user,
+            ActivityCreate(
+                activity_type="FILE_ACCESS",
+                description="AI Prediction: Insider Threat",
+                risk_score=35,
+                severity="Medium",
+                status="Success",
+            ),
+        )
+
+        assert activity.id is not None
+        assert session.query(Alert).count() == 1
+        alert = session.query(Alert).one()
+        assert alert.alert_type == "FILE_ACCESS"
+    finally:
+        session.close()
+
+
