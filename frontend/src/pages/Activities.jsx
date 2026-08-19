@@ -15,6 +15,7 @@ import {
   TextField,
   MenuItem,
   Button,
+  TablePagination,
 } from "@mui/material";
 
 import DownloadIcon from "@mui/icons-material/Download";
@@ -31,6 +32,9 @@ export default function Activities() {
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     fetchActivities();
@@ -60,6 +64,7 @@ export default function Activities() {
     }
 
     setFilteredActivities(filtered);
+    setPage(0);
   }, [activities, search, severityFilter, statusFilter]);
 
   const fetchActivities = async () => {
@@ -289,7 +294,9 @@ export default function Activities() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredActivities.map((activity) => (
+                      filteredActivities
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((activity) => (
                         <TableRow
                           key={activity.id}
                           hover
@@ -339,6 +346,19 @@ export default function Activities() {
                   </TableBody>
                 </Table>
               </TableContainer>
+
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50, 100]}
+                component="div"
+                count={filteredActivities.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={(e, newPage) => setPage(newPage)}
+                onRowsPerPageChange={(e) => {
+                  setRowsPerPage(parseInt(e.target.value, 10));
+                  setPage(0);
+                }}
+              />
             </>
           )}
         </Paper>

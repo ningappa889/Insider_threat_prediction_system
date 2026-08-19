@@ -15,6 +15,7 @@ import {
   MenuItem,
   Button,
   TableContainer,
+  TablePagination,
 } from "@mui/material";
 
 import DownloadIcon from "@mui/icons-material/Download";
@@ -31,6 +32,9 @@ export default function Alerts() {
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("All");
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   useEffect(() => {
     fetchAlerts();
   }, []);
@@ -39,10 +43,14 @@ export default function Alerts() {
     let filtered = [...alerts];
 
     if (search.trim() !== "") {
-      filtered = filtered.filter((alert) =>
-        alert.alert_type
-          ?.toLowerCase()
-          .includes(search.toLowerCase())
+      filtered = filtered.filter(
+        (alert) =>
+          alert.alert_type
+            ?.toLowerCase()
+            .includes(search.toLowerCase()) ||
+          alert.description
+            ?.toLowerCase()
+            .includes(search.toLowerCase())
       );
     }
 
@@ -53,6 +61,7 @@ export default function Alerts() {
     }
 
     setFilteredAlerts(filtered);
+    setPage(0);
   }, [alerts, search, severityFilter]);
 
   const fetchAlerts = async () => {
@@ -271,7 +280,9 @@ export default function Alerts() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAlerts.map((alert) => (
+                  filteredAlerts
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((alert) => (
                     <TableRow
                       key={alert.id}
                       hover
@@ -319,6 +330,19 @@ export default function Alerts() {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={filteredAlerts.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(e, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+          />
             </>
           )}
         </Paper>

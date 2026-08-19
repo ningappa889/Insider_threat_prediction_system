@@ -120,7 +120,9 @@ class ActivityService:
         db: Session,
         activity_type: str = None,
         severity: str = None,
-        status: str = None
+        status: str = None,
+        limit: int = 100,
+        skip: int = 0
     ):
         query = db.query(Activity)
 
@@ -139,7 +141,12 @@ class ActivityService:
                 Activity.status == status
             )
 
-        return query.order_by(Activity.created_at.desc()).all()
+        return (
+            query.order_by(Activity.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     @staticmethod
     def get_activity_by_id(

@@ -37,6 +37,8 @@ def get_all_activities(
     activity_type: Optional[str] = None,
     severity: Optional[str] = None,
     status: Optional[str] = None,
+    limit: int = 100,
+    skip: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -44,7 +46,9 @@ def get_all_activities(
         db,
         activity_type,
         severity,
-        status
+        status,
+        limit,
+        skip
     )
 
 @router.get("/{activity_id}", response_model=ActivityResponse)

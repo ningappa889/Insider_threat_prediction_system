@@ -48,10 +48,16 @@ class AlertService:
         return alert
 
     @staticmethod
-    def get_all_alerts(db: Session):
+    def get_all_alerts(
+        db: Session,
+        limit: int = 100,
+        skip: int = 0
+    ):
         return (
             db.query(Alert)
             .order_by(Alert.created_at.desc())
+            .offset(skip)
+            .limit(limit)
             .all()
         )
 

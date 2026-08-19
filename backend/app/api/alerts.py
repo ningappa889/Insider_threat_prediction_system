@@ -15,10 +15,12 @@ router = APIRouter(
 
 @router.get("/", response_model=list[AlertResponse])
 def get_alerts(
+    limit: int = 100,
+    skip: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return AlertService.get_all_alerts(db)
+    return AlertService.get_all_alerts(db, limit=limit, skip=skip)
 
 
 @router.get("/{alert_id}", response_model=AlertResponse)
