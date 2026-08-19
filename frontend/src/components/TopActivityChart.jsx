@@ -9,9 +9,11 @@ import {
 } from "recharts";
 
 export default function TopActivityChart({ data = [] }) {
+  const safeData = Array.isArray(data) ? data : [];
+
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
+      <BarChart data={safeData}>
         <CartesianGrid strokeDasharray="3 3" />
 
         <XAxis dataKey="activity" />
