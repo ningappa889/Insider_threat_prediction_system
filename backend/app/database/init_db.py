@@ -17,17 +17,21 @@ def sync_existing_severities():
         activities = db.query(Activity).all()
         alerts = db.query(Alert).all()
 
+        updated = False
         for activity in activities:
-            activity.severity = SeverityService.from_risk_score(
-                activity.risk_score
-            )
+            expected = SeverityService.from_risk_score(activity.risk_score)
+            if activity.severity != expected:
+                activity.severity = expected
+                updated = True
 
         for alert in alerts:
-            alert.severity = SeverityService.from_risk_score(
-                alert.risk_score
-            )
+            expected = SeverityService.from_risk_score(alert.risk_score)
+            if alert.severity != expected:
+                alert.severity = expected
+                updated = True
 
-        db.commit()
+        if updated:
+            db.commit()
     except Exception:
         db.rollback()
         raise
