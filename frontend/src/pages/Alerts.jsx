@@ -172,7 +172,7 @@ export default function Alerts() {
         sx={{
           flexGrow: 1,
           p: 4,
-          backgroundColor: "#f5f7fb",
+          backgroundColor: "background.default",
           minHeight: "100vh",
         }}
       >
