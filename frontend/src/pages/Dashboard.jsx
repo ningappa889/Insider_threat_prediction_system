@@ -41,9 +41,34 @@ export default function Dashboard() {
   const loadStats = async () => {
     try {
       const res = await api.get("/stats/");
-      setStats(res.data);
+      if (res && res.data) {
+        setStats({
+          total_users: res.data.total_users ?? 0,
+          total_activities: res.data.total_activities ?? 0,
+          total_alerts: res.data.total_alerts ?? 0,
+          high_risk_users: res.data.high_risk_users ?? 0,
+          average_risk_score: res.data.average_risk_score ?? 0,
+          critical_alerts: res.data.critical_alerts ?? 0,
+          high_risk_activities: res.data.high_risk_activities ?? 0,
+          severity_distribution: Array.isArray(res.data.severity_distribution)
+            ? res.data.severity_distribution
+            : [],
+          activity_trend: Array.isArray(res.data.activity_trend)
+            ? res.data.activity_trend
+            : [],
+          top_activity_types: Array.isArray(res.data.top_activity_types)
+            ? res.data.top_activity_types
+            : [],
+          recent_alerts: Array.isArray(res.data.recent_alerts)
+            ? res.data.recent_alerts
+            : [],
+          recent_activities: Array.isArray(res.data.recent_activities)
+            ? res.data.recent_activities
+            : [],
+        });
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Error loading dashboard stats:", err);
     } finally {
       setLoading(false);
     }
@@ -174,6 +199,7 @@ export default function Dashboard() {
             sx={{
               p: 3,
               borderRadius: 3,
+              minWidth: 0,
             }}
           >
             <Typography variant="h6" mb={2}>
@@ -191,6 +217,7 @@ export default function Dashboard() {
             sx={{
               p: 3,
               borderRadius: 3,
+              minWidth: 0,
             }}
           >
             <Typography variant="h6" mb={2}>
@@ -208,6 +235,7 @@ export default function Dashboard() {
             sx={{
               p: 3,
               borderRadius: 3,
+              minWidth: 0,
             }}
           >
             <Typography variant="h6" mb={2}>
