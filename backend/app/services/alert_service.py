@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -67,7 +67,7 @@ class AlertService:
         description: str
     ):
 
-        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+        ten_minutes_ago = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(minutes=10)
 
         existing_alert = (
             db.query(Alert)

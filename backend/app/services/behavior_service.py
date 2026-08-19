@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -13,7 +13,7 @@ class BehaviorService:
         user_id: int
     ):
 
-        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+        ten_minutes_ago = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(minutes=10)
 
         failed_logins = (
             db.query(Activity)
@@ -33,7 +33,7 @@ class BehaviorService:
         user_id: int
     ):
 
-        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+        five_minutes_ago = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(minutes=5)
 
         usb_insert = (
             db.query(Activity)
@@ -75,7 +75,7 @@ class BehaviorService:
         user_id: int
     ):
 
-        ten_minutes_ago = datetime.utcnow() - timedelta(minutes=10)
+        ten_minutes_ago = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(minutes=10)
 
         login = (
             db.query(Activity)
