@@ -32,6 +32,7 @@ export default function Activities() {
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [dateFilter, setDateFilter] = useState("");
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -63,9 +64,17 @@ export default function Activities() {
       );
     }
 
+    if (dateFilter) {
+      filtered = filtered.filter((activity) => {
+        if (!activity.created_at) return false;
+        const actDate = String(activity.created_at).split("T")[0].split(" ")[0];
+        return actDate === dateFilter;
+      });
+    }
+
     setFilteredActivities(filtered);
     setPage(0);
-  }, [activities, search, severityFilter, statusFilter]);
+  }, [activities, search, severityFilter, statusFilter, dateFilter]);
 
   const fetchActivities = async () => {
     try {
@@ -184,9 +193,10 @@ export default function Activities() {
           sx={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(250px,1fr))",
+              "repeat(auto-fit, minmax(200px,1fr))",
             gap: 2,
             mb: 3,
+            alignItems: "center",
           }}
         >
           <TextField
@@ -194,6 +204,15 @@ export default function Activities() {
             label="Search Activity"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <TextField
+            fullWidth
+            label="Filter Date"
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            InputLabelProps={{ shrink: true }}
           />
 
           <TextField
@@ -225,6 +244,22 @@ export default function Activities() {
             <MenuItem value="Success">Success</MenuItem>
             <MenuItem value="Failed">Failed</MenuItem>
           </TextField>
+
+          {(search || severityFilter !== "All" || statusFilter !== "All" || dateFilter) && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => {
+                setSearch("");
+                setSeverityFilter("All");
+                setStatusFilter("All");
+                setDateFilter("");
+              }}
+              sx={{ height: 56 }}
+            >
+              Clear Filters
+            </Button>
+          )}
         </Box>
 
         <Paper
