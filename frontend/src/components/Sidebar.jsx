@@ -68,15 +68,7 @@ export default function Sidebar() {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const handleNavClick = (path) => {
-    if (path === "/dashboard") {
-      if (location.pathname === "/dashboard") {
-        window.location.reload();
-      } else {
-        window.location.href = "/dashboard";
-      }
-    } else {
-      navigate(path);
-    }
+    navigate(path);
   };
 
   const handleConfirmLogout = () => {
